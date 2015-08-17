@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Redmine Sweeper</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">設定</string>
+
+    <string name="user_name_label">%2$s %1$s</string>
+
+    <string name="created_info_label">%1$s が %2$s に作成</string>
+
+    <string name="now_loading_label">now loading...</string>
+
+    <string name="date_format">yyyy/MM/dd</string>
+
+    <string name="filter_open">未完了</string>
+
+    <string name="filter_close">完了</string>
+
+    <string name="filter_all">全て</string>
+
+    <string name="filter_watch">ウォッチ中</string>
+</resources>
