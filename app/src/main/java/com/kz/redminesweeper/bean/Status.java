@@ -1,5 +1,7 @@
 package com.kz.redminesweeper.bean;
 
+import com.kz.redminesweeper.R;
+
 import java.io.Serializable;
 
 public class Status implements IssuesFilter, Serializable {
@@ -36,6 +38,16 @@ public class Status implements IssuesFilter, Serializable {
             return "A";
         } else {
             return getId().toUpperCase();
+        }
+    }
+
+    @Override
+    public int getColorId() {
+        switch (id) {
+            case "c" : return R.color.status_close;
+            case "o" : return R.color.status_open;
+            case "*" : return R.color.status_all;
+            default  : return R.color.theme;
         }
     }
 

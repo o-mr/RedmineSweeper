@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.kz.redminesweeper.R;
@@ -65,15 +66,21 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
        refresh.setOnRefreshListener(this);
     }
 
-    @Background
     void downloadIssues() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        IssuesFilter filter = app.getFilter();
-        if (filter == null) return;
         if (isLoading) return;
         if (isLoaded) return;
+        if (app.getFilter() == null) return;
+        refresh.setRefreshing(true);
         isLoading = true;
+        downloadIssuesAsync();
+    }
+
+    @Background
+    void downloadIssuesAsync() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         Issues issues = null;
+        IssuesFilter filter = app.getFilter();
         if (filter instanceof Status) {
             issues = app.getRedmine().getMyIssuesByProjectIdAndStatusId(project.getId(), filter.getId(), offset, LIMIT);
         } else if (filter instanceof Tracker) {
@@ -89,12 +96,11 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         isLoading = false;
         offset += issues.getIssues().size();
-        if (issues.getIssues().size() < LIMIT) {
-            isLoaded = true;
-        }
+        isLoaded = issues.getIssues().size() < LIMIT;
         for (Issue issue : issues) {
             issueListAdapter.remove(issue);
         }
+        refresh.setRefreshing(false);
         issueListAdapter.addAll(issues.getIssues());
         issueListAdapter.notifyDataSetChanged();
     }
@@ -124,7 +130,6 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         clearList();
         downloadIssues();
-        refresh.setRefreshing(false);
     }
 
     public void clearList() {

@@ -1,99 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:id="@+id/base_layout"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp" >
+    android:layout_margin="16dp"
+    >
 
         <TextView
+            android:id="@+id/tracker_label"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:id="@+id/tracker_label"
             android:background="@drawable/oval_label"
-            android:textSize="10dp"
-            android:textColor="#ffffff"
-            android:text="XX"
             android:gravity="center"
+            android:textSize="10dp"
+            android:textColor="@color/text_strong"
+            android:text="XX"
             android:focusableInTouchMode="false"
-            android:focusable="false"/>
+            android:focusable="false"
+            />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp">
+        android:layout_marginLeft="16dp"
+        >
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <TextView
+                android:id="@+id/id_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/id_label"
+                android:paddingRight="8dp"
                 android:textSize="14dp"
+                android:textColor="@color/text_normal"
                 android:textStyle="bold"
                 android:text="99"
                 android:focusableInTouchMode="false"
                 android:focusable="false"
-                android:paddingRight="8dp" />
+                />
 
             <TextView
+                android:id="@+id/subject_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/subject_label"
                 android:textSize="14dp"
+                android:textColor="@color/text_normal"
                 android:textStyle="bold"
+                android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXX"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-                android:focusableInTouchMode="false" />
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
 
         </LinearLayout>
 
         <TextView
+            android:id="@+id/description_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/description_label"
+            android:padding="4dp"
             android:textSize="10dp"
+            android:textColor="@color/text_normal"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            android:padding="4dp" />
+            />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <TextView
+                android:id="@+id/priority_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/priority_label"
-                android:background="@drawable/corner_round_label"
-                android:text="XXXX"
-                android:textSize="10dp"
-                android:textColor="#fff"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="8dp"
+                android:background="@drawable/corner_round_label"
+                android:textSize="10dp"
+                android:textColor="@color/text_strong"
+                android:text="XXXX"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/created_info_label"
-                android:textAlignment="center"
                 android:textSize="10dp"
+                android:textColor="@color/text_normal"
                 android:text="@string/created_info_label"
+                android:textAlignment="center"
                 android:focusableInTouchMode="false"
-                android:focusable="false" />
+                android:focusable="false"
+                />
 
         </LinearLayout>
 

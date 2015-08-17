@@ -1,7 +1,10 @@
 package com.kz.redminesweeper;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -11,53 +14,53 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.FrameLayout;
 
 import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
+import com.kz.redminesweeper.bean.Account;
 import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
-import com.kz.redminesweeper.bean.Status;
-import com.kz.redminesweeper.bean.Tracker;
 import com.kz.redminesweeper.fragment.NavigationFragment;
-import com.kz.redminesweeper.rest.RedmineAuthInterceptor;
-import com.kz.redminesweeper.rest.RedmineRestService;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.rest.RestService;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)
 public class MainActivity extends AppCompatActivity implements NavigationFragment.FilterSelectedCallbacks {
 
+    @App
+    RmSApplication app;
+
     @ViewById
-    ViewPager pager;
+    DrawerLayout drawerLayout;
 
     @ViewById
     FrameLayout navigationFrame;
 
     @ViewById
-    DrawerLayout drawerLayout;
+    ViewPager pager;
 
-    @App
-    RmSApplication app;
+    @ViewById
+    PagerTabStrip pagerTab;
 
     IssueListPagerAdapter issueListPagerAdapter;
 
     @AfterViews
     void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        createNavigation();
+        Account account = app.getAccount();
+        if (account == null) {
+
+        }
+        app.setUpRedmineRestService(account);
+        createIssueListPager();
         createActionBar();
+        createNavigation();
     }
 
     void createActionBar() {
@@ -95,10 +98,15 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     public void onFilterSelected(IssuesFilter filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         getSupportActionBar().setTitle(app.getFilter().getName());
+        Drawable drawable = getResources().getDrawable(filter.getColorId());
+        getSupportActionBar().setBackgroundDrawable(drawable);
+        int color = getResources().getColor(filter.getColorId());
+        pagerTab.setTextColor(color);
+        pagerTab.setTabIndicatorColor(color);
         if (issueListPagerAdapter == null) {
             createIssueListPager();
         } else {
-            issueListPagerAdapter.updateIssueList();
+            issueListPagerAdapter.updateIssueList(filter);
         }
     }
 }

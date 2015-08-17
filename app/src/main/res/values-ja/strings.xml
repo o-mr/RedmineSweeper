@@ -15,11 +15,11 @@
 
     <string name="date_format">yyyy/MM/dd</string>
 
-    <string name="filter_open">未完了</string>
+    <string name="filter_open">未完了のチケット</string>
 
-    <string name="filter_close">完了</string>
+    <string name="filter_close">完了したチケット</string>
 
-    <string name="filter_all">全て</string>
+    <string name="filter_all">全てのチケット</string>
 
-    <string name="filter_watch">ウォッチ中</string>
+    <string name="filter_watch">ウォッチ中のチケット</string>
 </resources>

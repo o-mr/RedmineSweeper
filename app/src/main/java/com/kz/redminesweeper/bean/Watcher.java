@@ -1,5 +1,7 @@
 package com.kz.redminesweeper.bean;
 
+import com.kz.redminesweeper.R;
+
 import java.io.Serializable;
 
 public class Watcher implements IssuesFilter, Serializable {
@@ -37,6 +39,11 @@ public class Watcher implements IssuesFilter, Serializable {
         } else {
             return id;
         }
+    }
+
+    @Override
+    public int getColorId() {
+        return R.color.status_watch;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.kz.redminesweeper.view;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.text.format.DateFormat;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -38,6 +39,8 @@ public class IssueListItem extends LinearLayout {
     }
 
     public void bind(Issue issue) {
+        GradientDrawable background = (GradientDrawable)trackerLabel.getBackground();
+        background.setColor(getContext().getResources().getColor(issue.getTracker().getColorId()));
         trackerLabel.setText(issue.getTracker().getName());
         priorityLabel.setText(issue.getPriority().getName());
         idLabel.setText("#" + issue.getId());

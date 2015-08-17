@@ -1,5 +1,7 @@
 package com.kz.redminesweeper.bean;
 
+import com.kz.redminesweeper.R;
+
 import java.io.Serializable;
 
 public class Tracker implements IssuesFilter, Serializable {
@@ -28,4 +30,9 @@ public class Tracker implements IssuesFilter, Serializable {
         return getId();
     }
 
+    @Override
+    public int getColorId() {
+        int offset = (Integer.parseInt(this.id) % 10) - 1;
+        return R.color.tracker_0 + offset;
+    }
 }

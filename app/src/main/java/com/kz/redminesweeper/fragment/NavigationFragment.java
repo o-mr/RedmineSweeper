@@ -100,9 +100,9 @@ public class NavigationFragment extends Fragment {
         filters.add(new Status("o", getString(R.string.filter_open)));
         filters.add(new Status("c", getString(R.string.filter_close)));
         filters.add(new Watcher("me", getString(R.string.filter_watch)));
+        filters.add(new Status("*", getString(R.string.filter_all)));
         Trackers trackers = app.getRedmine().getTrackers();
         filters.addAll(trackers.getTrackers());
-        filters.add(new Status("*", getString(R.string.filter_all)));
         updateFilterList(filters);
     }
 

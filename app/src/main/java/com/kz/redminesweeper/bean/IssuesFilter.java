@@ -13,4 +13,6 @@ public interface IssuesFilter extends Serializable {
     public void setName(String name);
 
     public String getLabel();
+
+    public int getColorId();
 }

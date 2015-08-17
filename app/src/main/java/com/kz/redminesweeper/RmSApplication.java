@@ -3,16 +3,19 @@ package com.kz.redminesweeper;
 import android.app.Application;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kz.redminesweeper.bean.Account;
 import com.kz.redminesweeper.bean.IssuesFilter;
-import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.User;
+import com.kz.redminesweeper.prefs.RmSPrefs_;
 import com.kz.redminesweeper.rest.RedmineAuthInterceptor;
 import com.kz.redminesweeper.rest.RedmineRestService;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.rest.RestService;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,23 +31,38 @@ public class RmSApplication extends Application {
     @Bean
     RedmineAuthInterceptor authInterceptor;
 
-    @Bean
-    Account account;
+    @Pref
+    RmSPrefs_ prefs;
 
     IssuesFilter filter;
+
+    List<Account> accounts;
 
     @Override
     public void onCreate() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         super.onCreate();
-        // TODO
-        account.setRootUrl("http://192.168.11.4/redmine");
-        account.setLoginId("oomura");
-        account.setPassword("password01");
-        setUpRedmineRestService();
+        loadAccounts();
     }
 
-    public void setUpRedmineRestService() {
+    public void loadAccounts() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        String accountsJson = prefs.getAccountsJson().get();
+        try {
+            accounts = new Gson().fromJson(accountsJson, new TypeToken<List<Account>>(){}.getType());
+            accounts.size(); //NPE
+        } catch (Exception e) {
+            accounts = new ArrayList<>();
+        }
+    }
+
+    public void saveAccounts() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        String accountsJson = new Gson().toJson(accounts);
+        prefs.getAccountsJson().put(accountsJson);
+    }
+
+    public void setUpRedmineRestService(Account account) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         redmine.setRootUrl(account.getRootUrl());
         authInterceptor.setAccount(account);
@@ -58,10 +76,6 @@ public class RmSApplication extends Application {
         return redmine;
     }
 
-    public void setRedmine(RedmineRestService redmine) {
-        this.redmine = redmine;
-    }
-
     public IssuesFilter getFilter() {
         return filter;
     }
@@ -70,12 +84,27 @@ public class RmSApplication extends Application {
         this.filter = filter;
     }
 
+    public void addAccount(Account account) {
+        accounts.add(account);
+    }
+
+    public void removeAccount(Account account) {
+        accounts.add(account);
+    }
+
+    public Account getEnableAccount() {
+        for (Account account : accounts) {
+            if (account.isEnable()) return account;
+        }
+        return null;
+    }
+
     public Account getAccount() {
-        return account;
+        return getEnableAccount();
     }
 
     public void setUser(User user) {
-        account.setUser(user);
+        getEnableAccount().setUser(user);
     }
 
 }

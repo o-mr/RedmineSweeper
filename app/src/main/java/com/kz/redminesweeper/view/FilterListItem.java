@@ -2,8 +2,11 @@ package com.kz.redminesweeper.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +32,8 @@ public class FilterListItem extends LinearLayout {
     }
 
     public void bind(IssuesFilter filter) {
+        GradientDrawable background = (GradientDrawable)idLabel.getBackground();
+        background.setColor(getContext().getResources().getColor(filter.getColorId()));
         idLabel.setText(filter.getLabel());
         nameLabel.setText(filter.getName());
     }

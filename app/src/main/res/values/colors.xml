@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="theme">#b71c1c</color>
     <color name="theme_select">#aab71c1c</color>
+    <color name="background">#ffffff</color>
+    <color name="line">#EEEEEE</color>
+    <color name="text_normal">#616161</color>
+    <color name="text_strong">#ffffff</color>
+
+    <color name="tracker_0">#f44336</color>
+    <color name="tracker_1">#3F51B5</color>
+    <color name="tracker_2">#8BC34A</color>
+    <color name="tracker_3">#9C27B0</color>
+    <color name="tracker_4">#FFA000</color>
+    <color name="tracker_5">#03A9F4</color>
+    <color name="tracker_6">#795548</color>
+    <color name="tracker_7">#009688</color>
+    <color name="tracker_8">#FF5722</color>
+    <color name="tracker_9">#607D8B</color>
+
+    <color name="status_open">#b71c1c</color>
+    <color name="status_close">#607D8B</color>
+    <color name="status_watch">#FF9800</color>
+    <color name="status_all">#03A9F4</color>
+
 </resources>
