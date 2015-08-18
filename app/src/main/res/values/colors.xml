@@ -7,6 +7,7 @@
     <color name="line">#EEEEEE</color>
     <color name="text_standard">#616161</color>
     <color name="text_reversal">#ffffff</color>
+    <color name="text_error">#f44336</color>
 
     <color name="tracker_0">#f44336</color>
     <color name="tracker_1">#3F51B5</color>

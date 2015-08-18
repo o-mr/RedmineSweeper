@@ -36,7 +36,7 @@ public class RmSApplication extends Application {
 
     IssuesFilter filter;
 
-    List<Account> accounts;
+    ArrayList<Account> accounts;
 
     @Override
     public void onCreate() {
@@ -48,8 +48,9 @@ public class RmSApplication extends Application {
     public void loadAccounts() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         String accountsJson = prefs.getAccountsJson().get();
+        Log.e(getClass().getName(), accountsJson);
         try {
-            accounts = new Gson().fromJson(accountsJson, new TypeToken<List<Account>>(){}.getType());
+            accounts = new Gson().fromJson(accountsJson, new TypeToken<ArrayList<Account>>(){}.getType());
             accounts.size(); //NPE
         } catch (Exception e) {
             accounts = new ArrayList<>();
@@ -58,7 +59,9 @@ public class RmSApplication extends Application {
 
     public void saveAccounts() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        String accountsJson = new Gson().toJson(accounts);
+        String accountsJson = new Gson().toJson(accounts, new TypeToken<ArrayList<Account>>() {
+        }.getType());
+        Log.e(getClass().getName(), accountsJson);
         prefs.getAccountsJson().put(accountsJson);
     }
 
@@ -85,7 +88,12 @@ public class RmSApplication extends Application {
     }
 
     public void addAccount(Account account) {
-        accounts.add(account);
+        int index = accounts.indexOf(account);
+        if (index < 0) {
+            accounts.add(account);
+        } else {
+            accounts.set(index, account);
+        }
     }
 
     public void removeAccount(Account account) {

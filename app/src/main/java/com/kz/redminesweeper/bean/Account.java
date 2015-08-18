@@ -7,15 +7,17 @@ import java.io.Serializable;
 @EBean
 public class Account implements Serializable {
 
-    private String rootUrl;
+    private String rootUrl = "";
 
-    private User user;
+    private String loginId = "";
 
-    private String loginId;
-
-    private String password;
+    private String password = "";
 
     private boolean enable;
+
+    private boolean savePassword = true;
+
+    private User user;
 
     public String getRootUrl() {
         return rootUrl;
@@ -23,14 +25,6 @@ public class Account implements Serializable {
 
     public void setRootUrl(String rootUrl) {
         this.rootUrl = rootUrl;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getLoginId() {
@@ -55,6 +49,22 @@ public class Account implements Serializable {
 
     public void setEnable(boolean enable) {
         this.enable = enable;
+    }
+
+    public boolean isSavePassword() {
+        return savePassword;
+    }
+
+    public void setSavePassword(boolean savePassword) {
+        this.savePassword = savePassword;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

@@ -22,4 +22,17 @@
     <string name="filter_all">全てのチケット</string>
 
     <string name="filter_watch">ウォッチ中のチケット</string>
+
+    <string name="account_settings_title">Redmine アカウント認証</string>
+
+    <string name="hint_url_text">URL</string>
+
+    <string name="hint_login_id_text">ログインID</string>
+
+    <string name="hint_password_text">パスワード</string>
+
+    <string name="hint_password_save_check">パスワードを保存する</string>
+
+    <string name="start_redmine_sweeper_label">Redmine Sweeperをスタート</string>
+
 </resources>

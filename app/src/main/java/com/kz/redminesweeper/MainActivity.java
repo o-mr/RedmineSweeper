@@ -1,6 +1,8 @@
 package com.kz.redminesweeper;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTabStrip;
@@ -16,6 +18,7 @@ import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
 import com.kz.redminesweeper.bean.Account;
 import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
+import com.kz.redminesweeper.fragment.IssueListFragment;
 import com.kz.redminesweeper.fragment.NavigationFragment;
 
 import org.androidannotations.annotations.AfterViews;
@@ -47,19 +50,28 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @ViewById
     PagerTabStrip pagerTab;
 
+    private boolean setupCompleted;
+
     IssueListPagerAdapter issueListPagerAdapter;
 
-    @AfterViews
-    void setUp() {
+    @Override
+    protected void onStart() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        super.onStart();
+        if (setupCompleted) return;
         Account account = app.getAccount();
-        if (account == null) {
-
+        if (account == null) account = new Account();
+        if (account.getPassword().length() == 0) {
+            Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
+            intent.putExtra("account", account);
+            startActivity(intent);
+        } else {
+            app.setUpRedmineRestService(account);
+            createIssueListPager();
+            createActionBar();
+            createNavigation();
+            setupCompleted = true;
         }
-        app.setUpRedmineRestService(account);
-        createIssueListPager();
-        createActionBar();
-        createNavigation();
     }
 
     void createActionBar() {
@@ -96,16 +108,22 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @Override
     public void onFilterSelected(IssuesFilter filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        getSupportActionBar().setTitle(app.getFilter().getName());
-        Drawable drawable = getResources().getDrawable(filter.getColorId());
-        getSupportActionBar().setBackgroundDrawable(drawable);
-        int color = getResources().getColor(filter.getColorId());
-        pagerTab.setTextColor(color);
-        pagerTab.setTabIndicatorColor(color);
+        setTitle();
         if (issueListPagerAdapter == null) {
             createIssueListPager();
         } else {
             issueListPagerAdapter.updateIssueList(filter);
         }
     }
+
+    public void setTitle() {
+        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        getSupportActionBar().setTitle(app.getFilter().getName());
+        Drawable drawable = getResources().getDrawable(app.getFilter().getColorId());
+        getSupportActionBar().setBackgroundDrawable(drawable);
+        int color = getResources().getColor(app.getFilter().getColorId());
+        pagerTab.setTextColor(color);
+        pagerTab.setTabIndicatorColor(color);
+    }
+
 }

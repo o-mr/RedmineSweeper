@@ -22,4 +22,17 @@
     <string name="filter_all">All</string>
 
     <string name="filter_watch">Watching</string>
+
+    <string name="account_settings_title">Redmine Account Authentication</string>
+
+    <string name="hint_url_text">URL</string>
+
+    <string name="hint_login_id_text">Login ID</string>
+
+    <string name="hint_password_text">Password</string>
+
+    <string name="hint_password_save_check">You want to save the password</string>
+
+    <string name="start_redmine_sweeper_label">Start Redmine Sweeper</string>
+
 </resources>

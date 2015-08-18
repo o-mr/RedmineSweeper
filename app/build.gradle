@@ -3,7 +3,8 @@ apply plugin: 'android-apt'
 
 def AAVersion = '3.3.2'
 def SpringVersion = '1.0.1.RELEASE'
-def GsonVersion = '2.2.4'
+//def GsonVersion = '2.2.4'
+def GsonVersion = '1.7.1'
 
 android {
     compileSdkVersion 22

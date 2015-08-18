@@ -1,13 +1,14 @@
 package com.kz.redminesweeper.fragment;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.kz.redminesweeper.R;
@@ -50,20 +51,22 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
 
     private int offset;
 
+    private int totalCount = -1;
+
     private boolean isLoading;
 
     private boolean isLoaded;
 
     private static final int LIMIT = 20;
 
-   @AfterViews
-   void setUp() {
-       Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-       listView.setOnScrollListener(this);
-       issueListAdapter = new IssueListAdapter(getActivity(), R.layout.issue_list_item, R.id.base_layout, new ArrayList<Issue>());
-       listView.setAdapter(issueListAdapter);
-       listView.setOnItemClickListener(this);
-       refresh.setOnRefreshListener(this);
+    @AfterViews
+    void setUp() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        listView.setOnScrollListener(this);
+        issueListAdapter = new IssueListAdapter(getActivity(), R.layout.issue_list_item, R.id.base_layout, new ArrayList<Issue>());
+        listView.setAdapter(issueListAdapter);
+        listView.setOnItemClickListener(this);
+        refresh.setOnRefreshListener(this);
     }
 
     void downloadIssues() {
@@ -94,15 +97,18 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     @UiThread
     void updateIssueList(Issues issues) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        isLoading = false;
+        if (issueListAdapter.getCount() == 0) {
+            totalCount = issues.getTotal_count();
+        }
         offset += issues.getIssues().size();
         isLoaded = issues.getIssues().size() < LIMIT;
         for (Issue issue : issues) {
             issueListAdapter.remove(issue);
         }
-        refresh.setRefreshing(false);
         issueListAdapter.addAll(issues.getIssues());
         issueListAdapter.notifyDataSetChanged();
+        refresh.setRefreshing(false);
+        isLoading = false;
     }
 
     public static IssueListFragment newInstance(Project project) {
@@ -110,12 +116,14 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {}
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+    }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        if (totalItemCount > (firstVisibleItem + visibleItemCount) + ((int)LIMIT / 5)) return;
+        if (totalItemCount > (firstVisibleItem + visibleItemCount) + ((int) LIMIT / 5)) return;
         downloadIssues();
     }
 
@@ -138,5 +146,9 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         isLoaded = false;
         issueListAdapter.clear();
         offset = 0;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
     }
 }

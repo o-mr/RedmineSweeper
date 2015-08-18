@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_standard"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        >
+
+        <TextView
+            android:id="@+id/title_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textSize="20dp"
+            android:textColor="@color/text_standard"
+            android:text="@string/account_settings_title"
+            />
+
+        <EditText
+            android:id="@+id/url_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_url_text"
+            android:inputType="textUri"
+            android:textColor="@color/text_standard"
+         />
+
+        <TextView
+            android:id="@+id/url_error_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="4dp"
+            android:textSize="16dp"
+            android:textColor="@color/text_error"
+            />
+
+        <EditText
+            android:id="@+id/login_id_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_login_id_text"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/text_standard"
+            />
+
+        <TextView
+            android:id="@+id/login_id_error_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="4dp"
+            android:textSize="16dp"
+            android:textColor="@color/text_error"
+            />
+
+        <EditText
+            android:id="@+id/password_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_password_text"
+            android:inputType="textPassword"
+            android:textColor="@color/text_standard"
+            />
+
+        <TextView
+            android:id="@+id/password_error_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="4dp"
+            android:textSize="16dp"
+            android:textColor="@color/text_error"
+            />
+
+        <CheckBox
+            android:id="@+id/save_password_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/hint_password_save_check"
+            android:checked="true"
+            android:textColor="@color/text_standard"
+            />
+
+        <TextView
+            android:id="@+id/start_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="center"
+            android:textSize="16dp"
+            android:clickable="true"
+            android:text="@string/start_redmine_sweeper_label"
+            />
+
+        <ImageButton
+            android:id="@+id/start_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_standard"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:src="@drawable/ic_arrow_right_bold_circle_outline_grey600_48dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -61,8 +61,8 @@ public class NavigationFragment extends Fragment {
     void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         accountNavigation = AccountNavigation_.build(getActivity());
-        filterList.addHeaderView(accountNavigation);
-        downloadUserInfo();
+        filterList.addHeaderView(accountNavigation, null, false);
+        accountNavigation.bind(app.getAccount());
         downloadFilter();
     }
 
@@ -79,12 +79,12 @@ public class NavigationFragment extends Fragment {
         mNavigationFrame = navigationFrame;
     }
 
-    @Background
-    void downloadUserInfo() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        User user = app.getRedmine().getMyUserInfo().getUser();
-        setUserInfo(user);
-    }
+//    @Background
+//    void downloadUserInfo() {
+//        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+//        User user = app.getRedmine().getMyUserInfo().getUser();
+//        setUserInfo(user);
+//    }
 
     @UiThread
     void setUserInfo(User user) {
@@ -125,11 +125,7 @@ public class NavigationFragment extends Fragment {
     public void onAttach(Activity activity) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         super.onAttach(activity);
-        try {
-            filterSelectedCallbacks = (FilterSelectedCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
-        }
+         filterSelectedCallbacks = (FilterSelectedCallbacks) activity;
 
         mDrawerToggle = new ActionBarDrawerToggle(
                 getActivity(),
