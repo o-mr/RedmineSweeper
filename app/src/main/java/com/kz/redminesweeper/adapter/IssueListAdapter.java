@@ -16,8 +16,8 @@ public class IssueListAdapter extends ArrayAdapter<Issue> {
 
     LayoutInflater layoutInflater;
 
-    public IssueListAdapter(Context context, int layoutId, List<Issue> list)  {
-        super(context, layoutId, list);
+    public IssueListAdapter(Context context, int layoutId, int viewId, List<Issue> list)  {
+        super(context, layoutId, viewId, list);
         layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

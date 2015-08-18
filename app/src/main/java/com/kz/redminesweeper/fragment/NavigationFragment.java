@@ -109,11 +109,11 @@ public class NavigationFragment extends Fragment {
     @UiThread
     void updateFilterList(List<? extends IssuesFilter> filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        filterListAdapter = new FilterListAdapter(getActivity(), 0, new ArrayList<IssuesFilter>());
+        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.filter_list_item, R.id.base_layout, new ArrayList<IssuesFilter>());
         filterList.setAdapter(filterListAdapter);
         filterListAdapter.addAll(filter);
         filterListAdapter.notifyDataSetChanged();
-        changeFilter(0);
+        changeFilter(1);
     }
 
     public boolean isDrawerOpen() {
@@ -193,19 +193,19 @@ public class NavigationFragment extends Fragment {
         if (position == 0) {
 
         } else {
-            changeFilter(position - 1);
+            changeFilter(position);
         }
     }
 
-    void changeFilter(int filterIndex) {
+    void changeFilter(int position) {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mNavigationFrame);
         }
         if (filterList != null) {
-            filterList.setItemChecked(filterIndex, true);
-            filterList.setSelection(filterIndex);
+            filterList.setItemChecked(position, true);
+            filterList.setSelection(position);
         }
-        IssuesFilter filter = filterListAdapter.getItem(filterIndex);
+        IssuesFilter filter = filterListAdapter.getItem(position - 1);
         app.setFilter(filter);
         if (filterSelectedCallbacks != null) {
             filterSelectedCallbacks.onFilterSelected(filter);

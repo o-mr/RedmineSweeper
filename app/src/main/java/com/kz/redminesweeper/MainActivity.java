@@ -1,6 +1,5 @@
 package com.kz.redminesweeper;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;

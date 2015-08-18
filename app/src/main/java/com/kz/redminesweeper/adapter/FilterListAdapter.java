@@ -16,8 +16,8 @@ public class FilterListAdapter extends ArrayAdapter<IssuesFilter> {
 
     LayoutInflater layoutInflater;
 
-    public FilterListAdapter(Context context, int layoutId, List<IssuesFilter> list)  {
-        super(context, layoutId, list);
+    public FilterListAdapter(Context context, int layoutId, int viewId, List<IssuesFilter> list)  {
+        super(context, layoutId, viewId, list);
         layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

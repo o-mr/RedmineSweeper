@@ -1,17 +1,9 @@
-<LinearLayout
+<ListView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/filter_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ListView
-        android:id="@+id/filter_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:divider="@color/line"
-        android:dividerHeight="1dp"
-        android:choiceMode="singleChoice"
-        />
-
-</LinearLayout>
+    android:layout_height="match_parent"
+    android:divider="@color/line"
+    android:dividerHeight="0dp"
+    android:choiceMode="singleChoice"
+    />

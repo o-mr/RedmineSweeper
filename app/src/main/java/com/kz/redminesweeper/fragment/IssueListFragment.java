@@ -60,7 +60,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
    void setUp() {
        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
        listView.setOnScrollListener(this);
-       issueListAdapter = new IssueListAdapter(getActivity(), 0, new ArrayList<Issue>());
+       issueListAdapter = new IssueListAdapter(getActivity(), R.layout.issue_list_item, R.id.base_layout, new ArrayList<Issue>());
        listView.setAdapter(issueListAdapter);
        listView.setOnItemClickListener(this);
        refresh.setOnRefreshListener(this);

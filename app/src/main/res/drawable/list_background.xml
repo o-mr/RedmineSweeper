@@ -1,0 +1,7 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_activated="true" android:drawable="@color/item_strong" />
+    <item android:state_selected="true" android:drawable="@color/item_strong" />
+    <item android:state_pressed="true" android:drawable="@color/item_strong" />
+    <item android:state_checked="true" android:drawable="@color/item_strong" />
+    <item android:drawable="@color/bg_standard" />
+</selector>
