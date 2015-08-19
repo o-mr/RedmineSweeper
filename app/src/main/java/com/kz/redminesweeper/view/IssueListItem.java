@@ -3,6 +3,7 @@ package com.kz.redminesweeper.view;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.text.format.DateFormat;
+import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,6 +37,14 @@ public class IssueListItem extends LinearLayout {
 
     public IssueListItem(Context context) {
         super(context);
+    }
+
+    public IssueListItem(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public IssueListItem(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
 
     public void bind(Issue issue) {

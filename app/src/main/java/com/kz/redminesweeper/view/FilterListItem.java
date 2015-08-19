@@ -7,6 +7,7 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.shapes.Shape;
+import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,14 @@ public class FilterListItem extends LinearLayout {
 
     public FilterListItem(Context context) {
         super(context);
+    }
+
+    public FilterListItem(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public FilterListItem(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
 
     public void bind(IssuesFilter filter) {

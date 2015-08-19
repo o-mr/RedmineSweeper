@@ -25,7 +25,7 @@
 
     <string name="account_settings_title">Redmine アカウント認証</string>
 
-    <string name="hint_url_text">URL</string>
+    <string name="hint_url_text">http://example.com/redmine</string>
 
     <string name="hint_login_id_text">ログインID</string>
 

@@ -1,6 +1,6 @@
 package com.kz.redminesweeper.rest;
 
-import com.kz.redminesweeper.bean.Account;
+import com.kz.redminesweeper.account.Account;
 
 import org.androidannotations.annotations.EBean;
 import org.springframework.http.HttpBasicAuthentication;

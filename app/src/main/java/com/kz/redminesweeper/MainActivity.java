@@ -2,7 +2,6 @@ package com.kz.redminesweeper;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTabStrip;
@@ -14,16 +13,16 @@ import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.FrameLayout;
 
+import com.kz.redminesweeper.account.AccountManager;
 import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
-import com.kz.redminesweeper.bean.Account;
+import com.kz.redminesweeper.account.Account;
 import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
-import com.kz.redminesweeper.fragment.IssueListFragment;
 import com.kz.redminesweeper.fragment.NavigationFragment;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         super.onStart();
         if (setupCompleted) return;
-        Account account = app.getAccount();
+        Account account = app.getAccountManager().getEnableAccount();
         if (account == null) account = new Account();
         if (account.getPassword().length() == 0) {
             Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);

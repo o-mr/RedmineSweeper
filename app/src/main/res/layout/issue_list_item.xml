@@ -8,18 +8,18 @@
     android:layout_margin="16dp"
     >
 
-        <TextView
-            android:id="@+id/tracker_label"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/oval_label"
-            android:gravity="center"
-            android:textSize="10dp"
-            android:textColor="@color/text_reversal"
-            android:text="XX"
-            android:focusableInTouchMode="false"
-            android:focusable="false"
-            />
+    <TextView
+        android:id="@+id/tracker_label"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/oval_label"
+        android:gravity="center"
+        android:textSize="10dp"
+        android:textColor="@color/text_reversal"
+        android:text="XX"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        />
 
     <LinearLayout
         android:orientation="vertical"

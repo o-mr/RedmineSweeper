@@ -7,8 +7,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,18 +14,19 @@ import android.widget.ListView;
 
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
+import com.kz.redminesweeper.account.Account;
+import com.kz.redminesweeper.adapter.AccountListAdapter;
 import com.kz.redminesweeper.adapter.FilterListAdapter;
 import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Trackers;
-import com.kz.redminesweeper.bean.User;
 import com.kz.redminesweeper.bean.Watcher;
-import com.kz.redminesweeper.view.AccountNavigation;
-import com.kz.redminesweeper.view.AccountNavigation_;
+import com.kz.redminesweeper.view.AccountView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
@@ -43,13 +42,19 @@ public class NavigationFragment extends Fragment {
     RmSApplication app;
 
     @ViewById
+    AccountView accountView;
+
+    @ViewById
     ListView filterList;
 
-    private AccountNavigation accountNavigation;
+    @ViewById
+    ListView accountList;
 
     private FilterSelectedCallbacks filterSelectedCallbacks;
 
     private FilterListAdapter filterListAdapter;
+
+    private AccountListAdapter accountListAdapter;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -60,10 +65,9 @@ public class NavigationFragment extends Fragment {
     @AfterViews
     void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        accountNavigation = AccountNavigation_.build(getActivity());
-        filterList.addHeaderView(accountNavigation, null, false);
-        accountNavigation.bind(app.getAccount());
-        downloadFilter();
+        createAccountView();
+        createFilterList();
+        createAccountList();
     }
 
     @Override
@@ -79,46 +83,43 @@ public class NavigationFragment extends Fragment {
         mNavigationFrame = navigationFrame;
     }
 
-//    @Background
-//    void downloadUserInfo() {
-//        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-//        User user = app.getRedmine().getMyUserInfo().getUser();
-//        setUserInfo(user);
-//    }
-
-    @UiThread
-    void setUserInfo(User user) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        app.setUser(user);
-        accountNavigation.bind(app.getAccount());
+    void createAccountView() {
+        accountView.bind(app.getAccountManager().getEnableAccount());
     }
 
-    @Background
-    void downloadFilter() {
+    void createFilterList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         List<IssuesFilter> filters = new ArrayList<>();
         filters.add(new Status("o", getString(R.string.filter_open)));
         filters.add(new Status("c", getString(R.string.filter_close)));
         filters.add(new Watcher("me", getString(R.string.filter_watch)));
         filters.add(new Status("*", getString(R.string.filter_all)));
+        downloadFilter(filters);
+    }
+
+    @Background
+    void downloadFilter(List<IssuesFilter> filters) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         Trackers trackers = app.getRedmine().getTrackers();
         filters.addAll(trackers.getTrackers());
         updateFilterList(filters);
     }
 
     @UiThread
-    void updateFilterList(List<? extends IssuesFilter> filter) {
+    void updateFilterList(List<IssuesFilter> filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.filter_list_item, R.id.base_layout, new ArrayList<IssuesFilter>());
+        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.filter_list_item, R.id.base_layout, filter);
         filterList.setAdapter(filterListAdapter);
-        filterListAdapter.addAll(filter);
         filterListAdapter.notifyDataSetChanged();
-        changeFilter(1);
+        selectFilter(0);
     }
 
-    public boolean isDrawerOpen() {
+    void createAccountList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mNavigationFrame);
+        accountListAdapter = new AccountListAdapter(getActivity(), R.layout.account_list_item, R.id.base_layout, app.getAccountManager().getAccounts());
+        accountList.setAdapter(accountListAdapter);
+        accountListAdapter.notifyDataSetChanged();
+        selectAccount(app.getAccountManager().indexOfEnableAccount());
     }
 
     @Override
@@ -174,39 +175,42 @@ public class NavigationFragment extends Fragment {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.main, menu);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     @ItemClick(R.id.filter_list)
-    void statusListItemClicked(int position) {
+    void selectFilter(int position) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        if (position == 0) {
-
-        } else {
-            changeFilter(position);
-        }
-    }
-
-    void changeFilter(int position) {
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mNavigationFrame);
-        }
-        if (filterList != null) {
-            filterList.setItemChecked(position, true);
-            filterList.setSelection(position);
-        }
-        IssuesFilter filter = filterListAdapter.getItem(position - 1);
+        mDrawerLayout.closeDrawer(mNavigationFrame);
+        filterList.setItemChecked(position, true);
+        filterList.setSelection(position);
+        IssuesFilter filter = filterListAdapter.getItem(position);
         app.setFilter(filter);
         if (filterSelectedCallbacks != null) {
             filterSelectedCallbacks.onFilterSelected(filter);
         }
     }
+
+    @ItemClick(R.id.account_list)
+    void selectAccount(int position) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        Account account = accountListAdapter.getItem(position);
+        if (account.equals(app.getAccountManager().getEnableAccount())) return;
+        mDrawerLayout.closeDrawer(mNavigationFrame);
+        accountList.setItemChecked(position, true);
+        accountList.setSelection(position);
+        app.getAccountManager().changeEnableAccount(account);
+    }
+
+    @Click(R.id.account_view)
+    void showAccountSettings() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        if (filterList.getVisibility() == View.VISIBLE) {
+            filterList.setVisibility(View.GONE);
+            accountList.setVisibility(View.VISIBLE);
+        } else {
+            filterList.setVisibility(View.VISIBLE);
+            accountList.setVisibility(View.GONE);
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

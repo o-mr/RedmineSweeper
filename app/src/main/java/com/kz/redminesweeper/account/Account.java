@@ -1,4 +1,6 @@
-package com.kz.redminesweeper.bean;
+package com.kz.redminesweeper.account;
+
+import com.kz.redminesweeper.bean.User;
 
 import org.androidannotations.annotations.EBean;
 

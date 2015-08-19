@@ -117,7 +117,6 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
     @Override

@@ -1,9 +1,38 @@
-<ListView
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/filter_list"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:divider="@color/line"
-    android:dividerHeight="0dp"
-    android:choiceMode="singleChoice"
-    />
+    android:layout_height="wrap_content"
+    android:background="@color/bg_standard"
+    >
+
+    <com.kz.redminesweeper.view.AccountView_
+        android:id="@+id/account_view"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <ListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/filter_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/line"
+        android:dividerHeight="0dp"
+        android:choiceMode="singleChoice"
+        />
+
+    <ListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/account_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/line"
+        android:dividerHeight="0dp"
+        android:choiceMode="singleChoice"
+        android:visibility="gone"
+        />
+
+</LinearLayout>
