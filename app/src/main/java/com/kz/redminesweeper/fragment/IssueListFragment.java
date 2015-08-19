@@ -1,5 +1,7 @@
 package com.kz.redminesweeper.fragment;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -58,7 +60,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     private static final int LIMIT = 25;
 
     @AfterViews
-    void setUp() {
+    public void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         listView.setOnScrollListener(this);
         issueListAdapter = new IssueListAdapter(getActivity(), R.layout.list_item_issue, R.id.base_layout, new ArrayList<Issue>());
@@ -107,6 +109,9 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         issueListAdapter.notifyDataSetChanged();
         refresh.setRefreshing(false);
         isLoading = false;
+        if (getActivity() != null) {
+            ((LoadedIssuesCallbacks) getActivity()).onLoadedIssues(this, issues);
+        }
     }
 
     public static IssueListFragment newInstance(Project project) {
@@ -147,6 +152,10 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
 
     public int getTotalCount() {
         return totalCount;
+    }
+
+    public interface LoadedIssuesCallbacks {
+        void onLoadedIssues(Fragment fragment,  Issues issues);
     }
 
 }

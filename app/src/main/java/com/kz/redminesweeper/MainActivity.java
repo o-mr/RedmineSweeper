@@ -3,6 +3,8 @@ package com.kz.redminesweeper;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTabStrip;
@@ -12,15 +14,21 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.kz.redminesweeper.account.AccountManager;
 import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
 import com.kz.redminesweeper.account.Account;
+import com.kz.redminesweeper.bean.Issues;
 import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
+import com.kz.redminesweeper.fragment.IssueListFragment;
 import com.kz.redminesweeper.fragment.NavigationFragment;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
@@ -34,7 +42,7 @@ import java.util.List;
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)
-public class MainActivity extends AppCompatActivity implements NavigationFragment.FilterSelectedCallbacks {
+public class MainActivity extends AppCompatActivity implements NavigationFragment.FilterSelectedCallbacks, IssueListFragment.LoadedIssuesCallbacks {
 
     @App
     RmSApplication app;
@@ -51,9 +59,17 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @ViewById
     PagerTabStrip pagerTab;
 
+    @ViewById
+    TextView title;
+
     private boolean setupCompleted;
 
     IssueListPagerAdapter issueListPagerAdapter;
+
+    @AfterViews
+    public void init() {
+        getSupportActionBar().hide();
+    }
 
     public void setUp() {
         if (setupCompleted) return;
@@ -66,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         } else {
             app.setUpRedmineRestService(account);
             createIssueListPager();
-            createActionBar();
             createNavigation();
+            createActionBar();
             setupCompleted = true;
         }
     }
@@ -123,6 +139,13 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         }
     }
 
+    @Override
+    public void onLoadedIssues(Fragment fragment, Issues issues) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        title.setVisibility(View.GONE);
+        getSupportActionBar().show();
+    }
+
     public void setTitle() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         getSupportActionBar().setTitle(app.getFilter().getName());
@@ -132,8 +155,6 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         pagerTab.setTextColor(color);
         pagerTab.setTabIndicatorColor(color);
     }
-
-    private boolean reboot;
 
     public void reboot() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
@@ -151,5 +172,4 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
             return getResources().getDrawable(id);
         }
     }
-
 }
