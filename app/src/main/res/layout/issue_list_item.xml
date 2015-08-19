@@ -12,7 +12,7 @@
         android:id="@+id/tracker_label"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/oval_label"
+        android:background="@drawable/filter_label"
         android:gravity="center"
         android:textSize="10dp"
         android:textColor="@color/text_reversal"

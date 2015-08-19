@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.kz.redminesweeper.MainActivity;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
 import com.kz.redminesweeper.account.Account;
@@ -106,9 +107,9 @@ public class NavigationFragment extends Fragment {
     }
 
     @UiThread
-    void updateFilterList(List<IssuesFilter> filter) {
+    void updateFilterList(List<IssuesFilter> filters) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.filter_list_item, R.id.base_layout, filter);
+        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.filter_list_item, R.id.base_layout, filters);
         filterList.setAdapter(filterListAdapter);
         filterListAdapter.notifyDataSetChanged();
         selectFilter(0);
@@ -192,11 +193,13 @@ public class NavigationFragment extends Fragment {
     void selectAccount(int position) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         Account account = accountListAdapter.getItem(position);
-        if (account.equals(app.getAccountManager().getEnableAccount())) return;
         mDrawerLayout.closeDrawer(mNavigationFrame);
         accountList.setItemChecked(position, true);
         accountList.setSelection(position);
+        if (account.equals(app.getAccountManager().getEnableAccount())) return;
         app.getAccountManager().changeEnableAccount(account);
+        ((MainActivity)getActivity()).reload();
+
     }
 
     @Click(R.id.account_view)
@@ -210,7 +213,6 @@ public class NavigationFragment extends Fragment {
             accountList.setVisibility(View.GONE);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

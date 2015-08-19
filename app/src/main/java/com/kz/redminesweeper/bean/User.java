@@ -1,17 +1,23 @@
 package com.kz.redminesweeper.bean;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
 
+    @Expose
     private int id;
 
+    @Expose
     private String login;
 
     private String name;
 
+    @Expose
     private String firstname;
 
+    @Expose
     private String lastname;
 
     public int getId() {

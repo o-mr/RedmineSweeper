@@ -3,12 +3,14 @@ package com.kz.redminesweeper.account;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.kz.redminesweeper.prefs.SharedPreferences_;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +22,16 @@ public class AccountManager {
     @Pref
     SharedPreferences_ prefs;
 
+    private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+    private static final Type JSON_OBJECT_TYPE = new TypeToken<ArrayList<Account>>() {}.getType();
+
     public void loadAccounts() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         String accountsJson = prefs.getAccountsJson().get();
         Log.e(getClass().getName(), accountsJson);
         try {
-            accounts = new Gson().fromJson(accountsJson, new TypeToken<ArrayList<Account>>(){}.getType());
+            accounts = GSON.fromJson(accountsJson, JSON_OBJECT_TYPE);
             accounts.size(); //NPE
         } catch (Exception e) {
             Log.e(getClass().getName(), accountsJson, e);
@@ -35,13 +41,17 @@ public class AccountManager {
 
     private synchronized void saveAccounts() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        String accountsJson = new Gson().toJson(accounts, new TypeToken<ArrayList<Account>>() {
-        }.getType());
+        String accountsJson = GSON.toJson(accounts, JSON_OBJECT_TYPE);
         Log.e(getClass().getName(), accountsJson);
         prefs.getAccountsJson().put(accountsJson);
     }
 
     public synchronized void putAccount(Account account) {
+        if (account.isSavePassword()) {
+            account.set_perpetuationPassword(account.getPassword());
+        } else {
+            account.set_perpetuationPassword("");
+        }
         int index = accounts.indexOf(account);
         if (index < 0) {
             accounts.add(account);

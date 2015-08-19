@@ -1,5 +1,6 @@
 package com.kz.redminesweeper.account;
 
+import com.google.gson.annotations.Expose;
 import com.kz.redminesweeper.bean.User;
 
 import org.androidannotations.annotations.EBean;
@@ -9,16 +10,25 @@ import java.io.Serializable;
 @EBean
 public class Account implements Serializable {
 
+    @Expose
     private String rootUrl = "";
 
+    @Expose
     private String loginId = "";
 
+    // in memory
     private String password = "";
 
+    @Expose
+    private String _perpetuationPassword = "";
+
+    @Expose
     private boolean enable;
 
+    @Expose
     private boolean savePassword = true;
 
+    @Expose
     private User user;
 
     public String getRootUrl() {
@@ -38,11 +48,22 @@ public class Account implements Serializable {
     }
 
     public String getPassword() {
+        if (password.length() == 0) {
+            return _perpetuationPassword;
+        }
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String get_perpetuationPassword() {
+        return _perpetuationPassword;
+    }
+
+    public void set_perpetuationPassword(String _perpetuationPassword) {
+        this._perpetuationPassword = _perpetuationPassword;
     }
 
     public boolean isEnable() {

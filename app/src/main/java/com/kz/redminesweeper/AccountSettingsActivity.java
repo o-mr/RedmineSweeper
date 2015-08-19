@@ -53,6 +53,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @Extra
     Account account;
 
+    boolean isAuthenticating;
+
     private ProgressDialog progressDialog;
 
     @AfterViews
@@ -69,6 +71,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     @TextChange({R.id.url_text, R.id.login_id_text, R.id.password_text})
     void onChangeInputValue() {
+        isAuthenticating = true;
         boolean enabled = isStart();
         int visibility = enabled ? View.VISIBLE : View.INVISIBLE;
         startButton.setVisibility(visibility);
@@ -81,14 +84,14 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @Click({R.id.start_button, R.id.start_label})
     void clickStart() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        progressDialog.setMessage("処理を実行中しています");
+        account.setEnable(true);
+        progressDialog.setMessage(getString(R.string.progress_dialog_auth_msg));
         progressDialog.setCancelable(true);
         progressDialog.show();
         account.setRootUrl(urlText.getText().toString());
         account.setLoginId(loginIdText.getText().toString());
         account.setPassword(passwordText.getText().toString());
         account.setSavePassword(savePasswordCheck.isChecked());
-        account.setEnable(true);
         authenticate();
     }
 
@@ -109,20 +112,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     @UiThread
     void authSuccessful() {
-        String password = account.getPassword();
-        if (!account.isSavePassword()) {
-            account.setPassword("");
-        }
         app.getAccountManager().putAccount(account);
-        account.setPassword(password);
-        progressDialog.hide();
+        isAuthenticating = false;
+        progressDialog.dismiss();
         finish();
     }
 
     @UiThread
     void authFailed() {
         urlErrorLabel.setText("error");
-        progressDialog.hide();
+        isAuthenticating = false;
+        progressDialog.dismiss();
     }
 
     private boolean isStart() {

@@ -35,4 +35,7 @@
 
     <string name="start_redmine_sweeper_label">Redmine Sweeperをスタート</string>
 
+    <string name="progress_dialog_auth_msg">認証処理を行っています</string>
+
+
 </resources>

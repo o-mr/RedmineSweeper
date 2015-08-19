@@ -3,13 +3,9 @@ package com.kz.redminesweeper;
 import android.app.Application;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kz.redminesweeper.account.Account;
 import com.kz.redminesweeper.account.AccountManager;
 import com.kz.redminesweeper.bean.IssuesFilter;
-import com.kz.redminesweeper.bean.User;
-import com.kz.redminesweeper.prefs.SharedPreferences_;
 import com.kz.redminesweeper.rest.RedmineAuthInterceptor;
 import com.kz.redminesweeper.rest.RedmineRestService;
 
@@ -17,7 +13,6 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.rest.RestService;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 

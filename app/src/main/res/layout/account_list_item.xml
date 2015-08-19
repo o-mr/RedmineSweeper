@@ -14,7 +14,7 @@
         android:layout_height="24dp"
         android:layout_margin="16dp"
         android:gravity="center"
-        android:background="@drawable/oval_label"
+        android:background="@drawable/account_label"
         android:textSize="8dp"
         android:textColor="@color/text_reversal"
         android:text="XX"
