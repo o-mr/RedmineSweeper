@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     android:background="?android:attr/activatedBackgroundIndicator"
     >
 
@@ -24,6 +25,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         >
 
         <TextView
@@ -53,5 +55,15 @@
             />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/bg_transparency"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_tooltip_edit_grey600_24dp"
+        />
 
 </LinearLayout>

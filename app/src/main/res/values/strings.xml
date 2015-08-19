@@ -37,6 +37,8 @@
 
     <string name="start_redmine_sweeper_label">Start Redmine Sweeper</string>
 
+    <string name="add_account_label">Add account</string>
+
     <string name="progress_dialog_auth_msg">It is running an authentication process</string>
 
 </resources>

@@ -172,4 +172,10 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
             return getResources().getDrawable(id);
         }
     }
+
+    public void startAccountSettings(Account account) {
+        Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
+        intent.putExtra("account", account);
+        startActivity(intent);
+    }
 }

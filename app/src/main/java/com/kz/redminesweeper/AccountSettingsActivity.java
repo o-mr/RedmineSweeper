@@ -73,7 +73,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @Click({R.id.start_button})
     void clickStart() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        account.setEnable(true);
         progressDialog.setMessage(getString(R.string.progress_dialog_auth_msg));
         progressDialog.setCancelable(true);
         progressDialog.show();
@@ -81,6 +80,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         account.setLoginId(loginIdText.getText().toString());
         account.setPassword(passwordText.getText().toString());
         account.setSavePassword(savePasswordCheck.isChecked());
+        account.setEnable(true);
         authenticate();
     }
 

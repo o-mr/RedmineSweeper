@@ -42,7 +42,6 @@ public class AccountHeader extends LinearLayout {
         User user = account.getUser();
         userNameLabel.setText(getContext().getString(R.string.user_name_label, user.getFirstname(), user.getLastname()));
         rootUrlLabel.setText(account.getRootUrl());
-
     }
 
     public void changeNavigationMode() {

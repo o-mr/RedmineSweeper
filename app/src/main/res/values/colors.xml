@@ -3,13 +3,18 @@
 
     <color name="theme">#d32f2f</color>
     <color name="theme_dark">#b71c1c</color>
+
     <color name="bg_standard">#ffffff</color>
     <color name="bg_reversal">#616161</color>
+    <color name="bg_transparency">#0000</color>
+
     <color name="line">#EEEEEE</color>
+
     <color name="text_standard">#616161</color>
     <color name="text_reversal">#ffffff</color>
     <color name="text_error">#b71c1c</color>
     <color name="text_hint">#cccccc</color>
+
     <color name="settings_title">#d32f2f</color>
 
     <color name="tracker_0">#b71c1c</color>

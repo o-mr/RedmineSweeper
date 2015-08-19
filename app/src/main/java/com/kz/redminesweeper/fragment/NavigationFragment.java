@@ -20,6 +20,8 @@ import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Trackers;
 import com.kz.redminesweeper.bean.Watcher;
+import com.kz.redminesweeper.view.AccountFooter;
+import com.kz.redminesweeper.view.AccountFooter_;
 import com.kz.redminesweeper.view.AccountHeader;
 import com.kz.redminesweeper.view.NavigationToggle;
 
@@ -49,6 +51,8 @@ public class NavigationFragment extends Fragment {
 
     @ViewById
     ListView accountList;
+
+    AccountFooter accountFooter;
 
     private FilterListAdapter filterListAdapter;
 
@@ -111,6 +115,8 @@ public class NavigationFragment extends Fragment {
 
     void createAccountList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        accountFooter = AccountFooter_.build(getActivity());
+        accountList.addFooterView(accountFooter);
         accountListAdapter = new AccountListAdapter(getActivity(), R.layout.list_item_account, R.id.base_layout, app.getAccountManager().getAccounts());
         accountList.setAdapter(accountListAdapter);
         accountListAdapter.notifyDataSetChanged();
