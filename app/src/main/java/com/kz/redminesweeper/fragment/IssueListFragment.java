@@ -55,7 +55,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
 
     private boolean isLoaded;
 
-    private static final int LIMIT = 20;
+    private static final int LIMIT = 25;
 
     @AfterViews
     void setUp() {
@@ -148,4 +148,5 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     public int getTotalCount() {
         return totalCount;
     }
+
 }

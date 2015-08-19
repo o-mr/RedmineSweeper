@@ -33,6 +33,8 @@
 
     <string name="hint_password_save_check">You want to save the password</string>
 
+    <string name="sign_in_button_label">sign in</string>
+
     <string name="start_redmine_sweeper_label">Start Redmine Sweeper</string>
 
     <string name="progress_dialog_auth_msg">It is running an authentication process</string>

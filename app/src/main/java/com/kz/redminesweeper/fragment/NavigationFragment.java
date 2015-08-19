@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Trackers;
 import com.kz.redminesweeper.bean.Watcher;
 import com.kz.redminesweeper.view.AccountHeader;
-import com.kz.redminesweeper.view.FilterHeader;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
@@ -47,9 +45,6 @@ public class NavigationFragment extends Fragment {
     AccountHeader accountHeader;
 
     @ViewById
-    FilterHeader filterHeader;
-
-    @ViewById
     ListView filterList;
 
     @ViewById
@@ -70,26 +65,15 @@ public class NavigationFragment extends Fragment {
     @AfterViews
     void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        createHeader();
+        accountHeader.bind(app.getAccountManager().getEnableAccount());
         createFilterList();
         createAccountList();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        super.onActivityCreated(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     public void setDrawer(DrawerLayout drawerLayout, FrameLayout navigationFrame) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         mDrawerLayout = drawerLayout;
         mNavigationFrame = navigationFrame;
-    }
-
-    void createHeader() {
-        accountHeader.bind(app.getAccountManager().getEnableAccount());
     }
 
     void createFilterList() {
@@ -117,6 +101,7 @@ public class NavigationFragment extends Fragment {
         filterList.setAdapter(filterListAdapter);
         filterListAdapter.notifyDataSetChanged();
         selectFilter(0);
+        setHasOptionsMenu(true);
     }
 
     void createAccountList() {
@@ -167,13 +152,6 @@ public class NavigationFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        super.onDetach();
-        filterSelectedCallbacks = null;
-    }
-
-    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         super.onConfigurationChanged(newConfig);
@@ -188,10 +166,7 @@ public class NavigationFragment extends Fragment {
         filterList.setSelection(position);
         IssuesFilter filter = filterListAdapter.getItem(position);
         app.setFilter(filter);
-        filterHeader.bind(filter);
-        if (filterSelectedCallbacks != null) {
-            filterSelectedCallbacks.onFilterSelected(filter);
-        }
+        filterSelectedCallbacks.onFilterSelected(filter);
     }
 
     @ItemClick(R.id.account_list)
@@ -203,27 +178,21 @@ public class NavigationFragment extends Fragment {
         accountList.setSelection(position);
         if (account.equals(app.getAccountManager().getEnableAccount())) return;
         app.getAccountManager().changeEnableAccount(account);
-        ((MainActivity)getActivity()).reload();
+        ((MainActivity)getActivity()).reboot();
 
     }
 
     @Click(R.id.account_header)
     void showAccountSettings() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        accountHeader.setVisibility(View.GONE);
-        accountList.setVisibility(View.GONE);
-        filterHeader.setVisibility(View.VISIBLE);
-        filterList.setVisibility(View.VISIBLE);
-
-    }
-
-    @Click(R.id.filter_header)
-    void showFilters() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        filterHeader.setVisibility(View.GONE);
-        filterList.setVisibility(View.GONE);
-        accountHeader.setVisibility(View.VISIBLE);
-        accountList.setVisibility(View.VISIBLE);
+        if (accountList.getVisibility() == View.VISIBLE) {
+            accountList.setVisibility(View.GONE);
+            filterList.setVisibility(View.VISIBLE);
+        } else {
+            accountList.setVisibility(View.VISIBLE);
+            filterList.setVisibility(View.GONE);
+        }
+        accountHeader.changeNavigationMode();
     }
 
     @Override

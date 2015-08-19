@@ -2,6 +2,7 @@ package com.kz.redminesweeper.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,6 +22,9 @@ public class AccountHeader extends LinearLayout {
     @ViewById
     TextView rootUrlLabel;
 
+    @ViewById
+    ImageView modeChangeButton;
+
 
     public AccountHeader(Context context) {
         super(context);
@@ -39,6 +43,10 @@ public class AccountHeader extends LinearLayout {
         userNameLabel.setText(getContext().getString(R.string.user_name_label, user.getFirstname(), user.getLastname()));
         rootUrlLabel.setText(account.getRootUrl());
 
+    }
+
+    public void changeNavigationMode() {
+        modeChangeButton.setActivated(!modeChangeButton.isActivated());
     }
 
 }

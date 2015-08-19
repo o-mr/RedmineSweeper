@@ -24,7 +24,7 @@
         android:paddingBottom="8dp"
         android:textSize="12dp"
         android:textColor="@color/text_reversal"
-        android:text="@string/now_loading_label"
+        android:text="XXXX XXXX"
         />
 
     <LinearLayout
@@ -38,17 +38,24 @@
             android:layout_height="wrap_content"
             android:textSize="10dp"
             android:textColor="@color/text_reversal"
-            android:text="@string/now_loading_label"
+            android:text="@string/hint_url_text"
             android:layout_weight="1"
             />
 
+        <ImageView
+            android:id="@+id/mode_change_button"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:background="@drawable/navigation_mode_change_button"
+            />
+<!--
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
             android:src="@drawable/ic_filter_white_18dp"
             />
-
+-->
     </LinearLayout>
 
 </LinearLayout>

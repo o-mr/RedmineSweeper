@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.kz.redminesweeper.account.Account;
@@ -42,18 +42,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
     CheckBox savePasswordCheck;
 
     @ViewById
-    ImageButton startButton;
-
-    @ViewById
-    TextView startLabel;
+    Button startButton;
 
     @ViewById
     TextView urlErrorLabel;
 
     @Extra
     Account account;
-
-    boolean isAuthenticating;
 
     private ProgressDialog progressDialog;
 
@@ -71,17 +66,12 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     @TextChange({R.id.url_text, R.id.login_id_text, R.id.password_text})
     void onChangeInputValue() {
-        isAuthenticating = true;
         boolean enabled = isStart();
-        int visibility = enabled ? View.VISIBLE : View.INVISIBLE;
-        startButton.setVisibility(visibility);
         startButton.setEnabled(enabled);
-        startLabel.setVisibility(visibility);
-        startLabel.setEnabled(enabled);
         urlErrorLabel.setText("");
     }
 
-    @Click({R.id.start_button, R.id.start_label})
+    @Click({R.id.start_button})
     void clickStart() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         account.setEnable(true);
@@ -113,7 +103,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @UiThread
     void authSuccessful() {
         app.getAccountManager().putAccount(account);
-        isAuthenticating = false;
         progressDialog.dismiss();
         finish();
     }
@@ -121,7 +110,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @UiThread
     void authFailed() {
         urlErrorLabel.setText("error");
-        isAuthenticating = false;
         progressDialog.dismiss();
     }
 

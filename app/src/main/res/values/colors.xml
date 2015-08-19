@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="theme">#b71c1c</color>
+    <color name="theme">#d32f2f</color>
+    <color name="theme_dark">#b71c1c</color>
     <color name="bg_standard">#ffffff</color>
     <color name="bg_reversal">#616161</color>
     <color name="line">#EEEEEE</color>
     <color name="text_standard">#616161</color>
     <color name="text_reversal">#ffffff</color>
-    <color name="text_error">#f44336</color>
+    <color name="text_error">#b71c1c</color>
+    <color name="text_hint">#cccccc</color>
+    <color name="settings_title">#d32f2f</color>
 
-    <color name="tracker_0">#f44336</color>
+    <color name="tracker_0">#b71c1c</color>
     <color name="tracker_1">#3F51B5</color>
     <color name="tracker_2">#8BC34A</color>
     <color name="tracker_3">#9C27B0</color>
@@ -20,7 +23,7 @@
     <color name="tracker_8">#FF5722</color>
     <color name="tracker_9">#607D8B</color>
 
-    <color name="status_open">#b71c1c</color>
+    <color name="status_open">#d32f2f</color>
     <color name="status_close">#607D8B</color>
     <color name="status_watch">#FF9800</color>
     <color name="status_all">#03A9F4</color>

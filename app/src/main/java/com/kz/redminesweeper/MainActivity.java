@@ -2,6 +2,7 @@ package com.kz.redminesweeper;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTabStrip;
@@ -27,6 +28,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.api.BackgroundExecutor;
 
 import java.util.List;
 
@@ -53,10 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
 
     IssueListPagerAdapter issueListPagerAdapter;
 
-    @Override
-    protected void onStart() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        super.onStart();
+    public void setUp() {
         if (setupCompleted) return;
         Account account = app.getAccountManager().getEnableAccount();
         if (account == null) account = new Account();
@@ -73,7 +72,15 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         }
     }
 
+    @Override
+    protected void onStart() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        super.onStart();
+        setUp();
+    }
+
     void createActionBar() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -85,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         FragmentManager fManager = getSupportFragmentManager();
         FragmentTransaction fTran = fManager.beginTransaction();
         NavigationFragment navigationFragment = NavigationFragment.newInstance();
-        fTran.replace(R.id.navigation_frame, navigationFragment);
         navigationFragment.setDrawer(drawerLayout, navigationFrame);
+        fTran.replace(R.id.navigation_frame, navigationFragment);
         fTran.commit();
     }
 
@@ -107,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @Override
     public void onFilterSelected(IssuesFilter filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        BackgroundExecutor.cancelAll("", true);
         setTitle();
         if (issueListPagerAdapter == null) {
             createIssueListPager();
@@ -116,22 +124,32 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     }
 
     public void setTitle() {
-        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         getSupportActionBar().setTitle(app.getFilter().getName());
-        Drawable drawable = getResources().getDrawable(app.getFilter().getColorId());
+        Drawable drawable = getDrawableById(app.getFilter().getColorId());
         getSupportActionBar().setBackgroundDrawable(drawable);
         int color = getResources().getColor(app.getFilter().getColorId());
         pagerTab.setTextColor(color);
         pagerTab.setTabIndicatorColor(color);
     }
 
-    public void reload() {
-        Intent intent = getIntent();
-        overridePendingTransition(0, 0);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        overridePendingTransition(0, 0);
-        startActivity(intent);
+    private boolean reboot;
+
+    public void reboot() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        BackgroundExecutor.cancelAll("", true);
+        app.setFilter(null);
+        setupCompleted = false;
+        setUp();
+    }
+
+    @SuppressWarnings("deprecation")
+    public Drawable getDrawableById(int id) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return getResources().getDrawable(id, getTheme());
+        } else {
+            return getResources().getDrawable(id);
+        }
     }
 
 }
