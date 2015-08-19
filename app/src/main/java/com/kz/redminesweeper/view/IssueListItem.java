@@ -5,7 +5,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kz.redminesweeper.R;
@@ -14,7 +13,7 @@ import com.kz.redminesweeper.bean.Issue;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.issue_list_item)
+@EViewGroup(R.layout.list_item_issue)
 public class IssueListItem extends LinearLayout {
 
     @ViewById

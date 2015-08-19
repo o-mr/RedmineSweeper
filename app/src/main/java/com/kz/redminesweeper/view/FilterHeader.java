@@ -7,13 +7,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kz.redminesweeper.R;
+import com.kz.redminesweeper.account.Account;
 import com.kz.redminesweeper.bean.IssuesFilter;
+import com.kz.redminesweeper.bean.User;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.list_item_filter)
-public class FilterListItem extends LinearLayout {
+@EViewGroup(R.layout.header_filter)
+public class FilterHeader extends LinearLayout {
+
+    @ViewById
+    LinearLayout baseLayout;
 
     @ViewById
     TextView idLabel;
@@ -22,21 +27,24 @@ public class FilterListItem extends LinearLayout {
     TextView nameLabel;
 
 
-    public FilterListItem(Context context) {
+    public FilterHeader(Context context) {
         super(context);
     }
 
-    public FilterListItem(Context context, AttributeSet attrs) {
+    public FilterHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FilterListItem(Context context, AttributeSet attrs, int defStyle) {
+    public FilterHeader(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     public void bind(IssuesFilter filter) {
+        int color = getContext().getResources().getColor(filter.getColorId());
+        baseLayout.setBackgroundColor(color);
         GradientDrawable background = (GradientDrawable)idLabel.getBackground();
-        background.setColor(getContext().getResources().getColor(filter.getColorId()));
+        background.setColor(getContext().getResources().getColor(R.color.bg_standard));
+        idLabel.setTextColor(color);
         idLabel.setText(filter.getLabel());
         nameLabel.setText(filter.getName());
     }

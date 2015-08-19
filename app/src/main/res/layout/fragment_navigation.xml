@@ -7,11 +7,19 @@
     android:background="@color/bg_standard"
     >
 
-    <com.kz.redminesweeper.view.AccountView_
-        android:id="@+id/account_view"
+    <com.kz.redminesweeper.view.FilterHeader_
+        android:id="@+id/filter_header"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        />
+
+    <com.kz.redminesweeper.view.AccountHeader_
+        android:id="@+id/account_header"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
         />
 
     <ListView

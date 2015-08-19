@@ -11,7 +11,7 @@ import com.kz.redminesweeper.account.Account;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.account_list_item)
+@EViewGroup(R.layout.list_item_account)
 public class AccountListItem extends LinearLayout {
 
     @ViewById

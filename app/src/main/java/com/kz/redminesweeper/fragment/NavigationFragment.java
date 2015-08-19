@@ -22,7 +22,8 @@ import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Trackers;
 import com.kz.redminesweeper.bean.Watcher;
-import com.kz.redminesweeper.view.AccountView;
+import com.kz.redminesweeper.view.AccountHeader;
+import com.kz.redminesweeper.view.FilterHeader;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
@@ -43,7 +44,10 @@ public class NavigationFragment extends Fragment {
     RmSApplication app;
 
     @ViewById
-    AccountView accountView;
+    AccountHeader accountHeader;
+
+    @ViewById
+    FilterHeader filterHeader;
 
     @ViewById
     ListView filterList;
@@ -66,7 +70,7 @@ public class NavigationFragment extends Fragment {
     @AfterViews
     void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        createAccountView();
+        createHeader();
         createFilterList();
         createAccountList();
     }
@@ -84,8 +88,8 @@ public class NavigationFragment extends Fragment {
         mNavigationFrame = navigationFrame;
     }
 
-    void createAccountView() {
-        accountView.bind(app.getAccountManager().getEnableAccount());
+    void createHeader() {
+        accountHeader.bind(app.getAccountManager().getEnableAccount());
     }
 
     void createFilterList() {
@@ -109,7 +113,7 @@ public class NavigationFragment extends Fragment {
     @UiThread
     void updateFilterList(List<IssuesFilter> filters) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.filter_list_item, R.id.base_layout, filters);
+        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.list_item_filter, R.id.base_layout, filters);
         filterList.setAdapter(filterListAdapter);
         filterListAdapter.notifyDataSetChanged();
         selectFilter(0);
@@ -117,7 +121,7 @@ public class NavigationFragment extends Fragment {
 
     void createAccountList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        accountListAdapter = new AccountListAdapter(getActivity(), R.layout.account_list_item, R.id.base_layout, app.getAccountManager().getAccounts());
+        accountListAdapter = new AccountListAdapter(getActivity(), R.layout.list_item_account, R.id.base_layout, app.getAccountManager().getAccounts());
         accountList.setAdapter(accountListAdapter);
         accountListAdapter.notifyDataSetChanged();
         selectAccount(app.getAccountManager().indexOfEnableAccount());
@@ -184,6 +188,7 @@ public class NavigationFragment extends Fragment {
         filterList.setSelection(position);
         IssuesFilter filter = filterListAdapter.getItem(position);
         app.setFilter(filter);
+        filterHeader.bind(filter);
         if (filterSelectedCallbacks != null) {
             filterSelectedCallbacks.onFilterSelected(filter);
         }
@@ -202,16 +207,23 @@ public class NavigationFragment extends Fragment {
 
     }
 
-    @Click(R.id.account_view)
+    @Click(R.id.account_header)
     void showAccountSettings() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        if (filterList.getVisibility() == View.VISIBLE) {
-            filterList.setVisibility(View.GONE);
-            accountList.setVisibility(View.VISIBLE);
-        } else {
-            filterList.setVisibility(View.VISIBLE);
-            accountList.setVisibility(View.GONE);
-        }
+        accountHeader.setVisibility(View.GONE);
+        accountList.setVisibility(View.GONE);
+        filterHeader.setVisibility(View.VISIBLE);
+        filterList.setVisibility(View.VISIBLE);
+
+    }
+
+    @Click(R.id.filter_header)
+    void showFilters() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        filterHeader.setVisibility(View.GONE);
+        filterList.setVisibility(View.GONE);
+        accountHeader.setVisibility(View.VISIBLE);
+        accountList.setVisibility(View.VISIBLE);
     }
 
     @Override

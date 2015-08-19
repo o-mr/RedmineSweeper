@@ -12,8 +12,8 @@ import com.kz.redminesweeper.bean.User;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.account_view)
-public class AccountView extends LinearLayout {
+@EViewGroup(R.layout.header_account)
+public class AccountHeader extends LinearLayout {
 
     @ViewById
     TextView userNameLabel;
@@ -22,15 +22,15 @@ public class AccountView extends LinearLayout {
     TextView rootUrlLabel;
 
 
-    public AccountView(Context context) {
+    public AccountHeader(Context context) {
         super(context);
     }
 
-    public AccountView(Context context, AttributeSet attrs) {
+    public AccountHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AccountView(Context context, AttributeSet attrs, int defStyle) {
+    public AccountHeader(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
