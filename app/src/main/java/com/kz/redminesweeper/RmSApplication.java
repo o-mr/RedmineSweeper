@@ -34,7 +34,7 @@ public class RmSApplication extends Application {
     IssuesFilter filter;
 
     @AfterInject
-    public void setUpAccountManager() {
+    public void setUpAccountManager()     {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         accountManager.loadAccounts();
     }

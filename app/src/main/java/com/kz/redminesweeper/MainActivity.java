@@ -62,44 +62,16 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @ViewById
     PagerTabStrip pagerTab;
 
-    BlankWall title;
-
-    private boolean setupCompleted;
-
     IssueListPagerAdapter issueListPagerAdapter;
 
     @AfterViews
-    public void init() {
-        getSupportActionBar().hide();
-        title = BlankWall_.build(this);
-        title.show(baseLayout);
-    }
-
     public void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        if (setupCompleted) return;
         Account account = app.getAccountManager().getEnableAccount();
-        AccountSettingsActivity.Mode mode = AccountSettingsActivity.Mode.SIGN_IN;
-        if (account == null) {
-            account = new Account();
-            mode = AccountSettingsActivity.Mode.ADD_FIRST;
-        }
-        if (account.getPassword().length() == 0) {
-            startAccountSettings(account, mode);
-        } else {
-            app.setUpRedmineRestService(account);
-            createIssueListPager();
-            createNavigation();
-            createActionBar();
-            setupCompleted = true;
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        super.onStart();
-        setUp();
+        app.setUpRedmineRestService(account);
+        createIssueListPager();
+        createNavigation();
+        createActionBar();
     }
 
     void createActionBar() {
@@ -107,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
+        getSupportActionBar().show();
     }
 
     void createNavigation() {
@@ -149,8 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @Override
     public void onLoadedIssues(Fragment fragment, Issues issues) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        title.hide();
-        getSupportActionBar().show();
     }
 
     public void setTitle() {
@@ -167,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         BackgroundExecutor.cancelAll("", true);
         app.setFilter(null);
-        setupCompleted = false;
         setUp();
     }
 
@@ -186,5 +156,11 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         intent.putExtra("modeInt", mode.ordinal());
         startActivity(intent);
         // TODO reboot は AccountSettings で行う。
+    }
+
+    public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
+        if (requestCode == 1) {
+            setUp();
+        }
     }
 }

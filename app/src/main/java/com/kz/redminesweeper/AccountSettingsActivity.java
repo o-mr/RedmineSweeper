@@ -2,6 +2,7 @@ package com.kz.redminesweeper;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,7 +35,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @App
     RmSApplication app;
 
-    BlankWall welcome;
+    BlankWall title;
 
     @ViewById
     LinearLayout baseLayout;
@@ -76,53 +77,77 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @AfterViews
     void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        onChangeInputValue();
         mode = Mode.values()[modeInt];
-        switch (mode) {
-            case ADD_FIRST:
-                welcome = BlankWall_.build(this);
-                welcome.setTitle(R.string.label_start_redmine_sweeper);
-                welcome.setSubTitle(R.string.label_start_redmine_sweeper_sub);
-                welcome.setClickHide(true);
-                welcome.show(baseLayout);
-            case ADD :
-            case SIGN_IN:
-                signInButton.setVisibility(View.VISIBLE);
-                editButtonGroup.setVisibility(View.GONE);
-                break;
-            case EDIT:
-                signInButton.setVisibility(View.GONE);
-                editButtonGroup.setVisibility(View.VISIBLE);
-                deleteButton.setEnabled(!account.isEnable());
+        account = (account == null) ? app.getAccountManager().getEnableAccount() : account;
+        if (account == null) {
+            mode = Mode.FIRST;
+            account = new Account();
         }
-
-        account = account.clone();
-        urlText.setText(account.getRootUrl());
-        loginIdText.setText(account.getLoginId());
-        passwordText.setText(account.getPassword());
-        savePasswordCheck.setChecked(account.isSavePassword());
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        bind(account.clone());
+        createProgressDialog();
+        switch (mode) {
+            case SIGN_IN: setupSignIn(); break;
+            case ADD: setupAdd(); break;
+            case EDIT: setupEdit(); break;
+            case FIRST: setUpFirst(); break;
+        }
+        onChangeInputValue();
     }
 
-    @TextChange({R.id.url_text, R.id.login_id_text, R.id.password_text})
-    void onChangeInputValue() {
-        boolean enabled = isStart();
-        signInButton.setEnabled(enabled);
-        urlErrorLabel.setText("");
+    private void setupSignIn() {
+        showTitle();
+        signInButton.setVisibility(View.VISIBLE);
+        editButtonGroup.setVisibility(View.GONE);
+        if (account.getPassword().length() == 0) {
+            passwordText.requestFocus();
+            title.setTimer(1000);
+        } else {
+            onClickSignIn();
+        }
+    }
+
+    private void setupAdd() {
+        signInButton.setVisibility(View.VISIBLE);
+        editButtonGroup.setVisibility(View.GONE);
+    }
+
+    private void setupEdit() {
+        signInButton.setVisibility(View.GONE);
+        editButtonGroup.setVisibility(View.VISIBLE);
+        deleteButton.setEnabled(!account.isEnable());
+    }
+
+    private void setUpFirst() {
+        showWelcome();
+        signInButton.setVisibility(View.VISIBLE);
+        editButtonGroup.setVisibility(View.GONE);
     }
 
     @Click({R.id.sign_in_button, R.id.update_button})
-    void clickStart() {
+    void onClickSignIn() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        progressDialog.setMessage(getString(R.string.dialog_msg_dialog_auth));
-        progressDialog.setCancelable(true);
         progressDialog.show();
         account.setRootUrl(urlText.getText().toString());
         account.setLoginId(loginIdText.getText().toString());
         account.setPassword(passwordText.getText().toString());
         account.setSavePassword(savePasswordCheck.isChecked());
         authenticate();
+    }
+
+    @Click({R.id.delete_button})
+    void deleteAccount() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        new AlertDialog.Builder(this)
+        .setTitle(R.string.dialog_title_delete_account)
+        .setMessage(R.string.dialog_msg_delete_account)
+        .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                app.getAccountManager().removeAccount(account);
+                startMainActivity();
+            }
+        })
+         .setNegativeButton(R.string.dialog_button_cancel, null)
+         .create().show();
     }
 
     @Background
@@ -134,75 +159,96 @@ public class AccountSettingsActivity extends AppCompatActivity {
             user.getName().length(); //NPE
             account.setUser(user);
             account.setEnable(true);
-            updateAccount();
+            authSuccessful();
         } catch (Exception e) {
             Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
             authFailed();
         }
     }
 
-    @Click({R.id.delete_button})
-    void deleteAccount() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_title_delete_account)
-                .setMessage(R.string.dialog_msg_delete_account)
-                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        app.getAccountManager().removeAccount(account);
-                        finish();
-                    }})
-                .setNegativeButton(R.string.dialog_button_cancel, null)
-                .create().show();
-    }
-
     @UiThread
-    void updateAccount() {
-        app.getAccountManager().putAccount(account);
+    void authSuccessful() {
+        app.getAccountManager().changeEnableAccount(account);
         progressDialog.dismiss();
-        finish();
+        startMainActivity();
     }
 
     @UiThread
     void authFailed() {
         urlErrorLabel.setText("error");
         progressDialog.dismiss();
+        title.hide();
     }
 
-    private boolean isStart() {
+    void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity_.class);
+        startActivityForResult(intent, 1);
+        finish();
+    }
+
+    @TextChange({R.id.url_text, R.id.login_id_text, R.id.password_text})
+    void onChangeInputValue() {
+        boolean enabled = isInputCompletion();
+        signInButton.setEnabled(enabled);
+        urlErrorLabel.setText("");
+    }
+
+    private boolean isInputCompletion() {
         String url = urlText.getText().toString();
         String loginId = loginIdText.getText().toString();
         String password = passwordText.getText().toString();
         return url.length()  > 0 && loginId.length()  > 0 && password.length() > 0;
     }
 
+    private void createProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage(getString(R.string.dialog_msg_dialog_auth));
+        progressDialog.setCancelable(true);
+    }
+
+    private void showWelcome() {
+        getSupportActionBar().hide();
+        title = BlankWall_.build(this);
+        title.setTitle(R.string.label_start_redmine_sweeper);
+        title.setSubTitle(R.string.label_start_redmine_sweeper_sub);
+        title.setClickHide(true);
+        title.show(baseLayout);
+    }
+
+    private void showTitle() {
+        getSupportActionBar().hide();
+        title = BlankWall_.build(this);
+        title.show(baseLayout);
+    }
+
+    private void bind(Account account) {
+        urlText.setText(account.getRootUrl());
+        loginIdText.setText(account.getLoginId());
+        passwordText.setText(account.getPassword());
+        savePasswordCheck.setChecked(account.isSavePassword());
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            switch (mode) {
-                case ADD_FIRST:
-                case SIGN_IN:
-                    new AlertDialog.Builder(this)
-                    .setTitle(R.string.dialog_title_rms_finish)
-                    .setMessage(R.string.dialog_msg_rms_finish)
-                    .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {moveTaskToBack(true);}})
-                    .setNegativeButton(R.string.dialog_button_cancel, null)
-                    .create().show();
-                case ADD:
-                case EDIT:
-                default:
+            if (mode == Mode.SIGN_IN || mode == Mode.FIRST) {
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.dialog_title_rms_finish)
+                .setMessage(R.string.dialog_msg_rms_finish)
+                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        moveTaskToBack(true);}})
+                .setNegativeButton(R.string.dialog_button_cancel, null)
+                .create().show();
             }
         }
         return super.onKeyDown(keyCode, event);
     }
 
     public enum Mode {
-        ADD_FIRST,
-        ADD,
-        EDIT,
-        SIGN_IN,
+        SIGN_IN, ADD, EDIT, FIRST,
     }
 
 }

@@ -26,6 +26,4 @@ public class RedmineAuthInterceptor implements ClientHttpRequestInterceptor {
         headers.setAuthorization(new HttpBasicAuthentication(account.getLoginId(), account.getPassword()));
         return execution.execute(request, body);
     }
-
-
 }

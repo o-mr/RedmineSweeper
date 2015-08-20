@@ -39,7 +39,7 @@
 
     <string name="label_button_delete">アカウントを削除</string>
 
-    <string name="label_start_redmine_sweeper">Redmine Sweeperを\n始めましょう</string>
+    <string name="label_start_redmine_sweeper">Redmine Sweeperを\n始めましょう！</string>
 
     <string name="label_start_redmine_sweeper_sub">Redmine Sweeperは\nシンプルなRedmineクライアントです。\nまずはアカウントを設定してください。</string>
 
@@ -55,7 +55,7 @@
 
     <string name="dialog_msg_rms_finish">Redmine Sweeperを終了してもよろしいですか？</string>
 
-    <string name="dialog_title_delete_account">アカウント削除の確認n</string>
+    <string name="dialog_title_delete_account">アカウント削除の確認</string>
 
     <string name="dialog_msg_delete_account">このアカウントを削除してもよろしいですか？</string>
 
