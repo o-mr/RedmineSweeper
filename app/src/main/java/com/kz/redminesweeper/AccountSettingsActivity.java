@@ -32,6 +32,8 @@ import org.androidannotations.annotations.ViewById;
 @EActivity(R.layout.activity_account_settings)
 public class AccountSettingsActivity extends AppCompatActivity {
 
+    public static final int REQUEST_CODE = 1001;
+
     @App
     RmSApplication app;
 
@@ -138,16 +140,16 @@ public class AccountSettingsActivity extends AppCompatActivity {
     void deleteAccount() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         new AlertDialog.Builder(this)
-        .setTitle(R.string.dialog_title_delete_account)
-        .setMessage(R.string.dialog_msg_delete_account)
-        .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                app.getAccountManager().removeAccount(account);
-                startMainActivity();
-            }
-        })
-         .setNegativeButton(R.string.dialog_button_cancel, null)
-         .create().show();
+            .setTitle(R.string.dialog_title_delete_account)
+            .setMessage(R.string.dialog_msg_delete_account)
+            .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                 public void onClick(DialogInterface dialog, int which) {
+                    app.getAccountManager().removeAccount(account);
+                    startMainActivity();
+                }
+            })
+            .setNegativeButton(R.string.dialog_button_cancel, null)
+            .create().show();
     }
 
     @Background
@@ -177,12 +179,19 @@ public class AccountSettingsActivity extends AppCompatActivity {
     void authFailed() {
         urlErrorLabel.setText("error");
         progressDialog.dismiss();
-        title.hide();
+        if (mode == Mode.SIGN_IN ) {
+            title.hide();
+        }
     }
 
     void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity_.class);
-        startActivityForResult(intent, 1);
+        if (mode == Mode.SIGN_IN || mode == Mode.FIRST) {
+            Intent intent = new Intent(this, MainActivity_.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 
@@ -209,7 +218,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private void showWelcome() {
         getSupportActionBar().hide();
-        title = BlankWall_.build(this);
         title.setTitle(R.string.label_start_redmine_sweeper);
         title.setSubTitle(R.string.label_start_redmine_sweeper_sub);
         title.setClickHide(true);
@@ -236,12 +244,12 @@ public class AccountSettingsActivity extends AppCompatActivity {
             if (mode == Mode.SIGN_IN || mode == Mode.FIRST) {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_title_rms_finish)
-                .setMessage(R.string.dialog_msg_rms_finish)
-                .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
+                        .setMessage(R.string.dialog_msg_rms_finish)
+                        .setPositiveButton(R.string.dialog_button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        moveTaskToBack(true);}})
-                .setNegativeButton(R.string.dialog_button_cancel, null)
-                .create().show();
+                            moveTaskToBack(true);}})
+                        .setNegativeButton(R.string.dialog_button_cancel, null)
+                        .create().show();
             }
         }
         return super.onKeyDown(keyCode, event);

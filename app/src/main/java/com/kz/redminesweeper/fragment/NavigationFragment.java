@@ -144,11 +144,11 @@ public class NavigationFragment extends Fragment {
     @ItemClick(R.id.account_list)
     void selectAccount(int position) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        Account account = accountListAdapter.getItem(position);
-        mDrawerLayout.closeDrawer(mNavigationFrame);
         accountList.setItemChecked(position, true);
         accountList.setSelection(position);
+        Account account = accountListAdapter.getItem(position);
         if (account.equals(app.getAccountManager().getEnableAccount())) return;
+        mDrawerLayout.closeDrawer(mNavigationFrame);
         app.getAccountManager().changeEnableAccount(account);
         ((MainActivity)getActivity()).reboot();
     }

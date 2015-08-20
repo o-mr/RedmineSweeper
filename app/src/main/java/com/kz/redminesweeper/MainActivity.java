@@ -62,16 +62,25 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @ViewById
     PagerTabStrip pagerTab;
 
+    private boolean setupCompleted;
+
     IssueListPagerAdapter issueListPagerAdapter;
 
-    @AfterViews
-    public void setUp() {
+    @Override
+    protected void onStart() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        super.onStart();
+        setUp();
+    }
+
+    public void setUp() {
+        if (setupCompleted) return;
         Account account = app.getAccountManager().getEnableAccount();
         app.setUpRedmineRestService(account);
         createIssueListPager();
         createNavigation();
         createActionBar();
+        setupCompleted = true;
     }
 
     void createActionBar() {
@@ -138,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         BackgroundExecutor.cancelAll("", true);
         app.setFilter(null);
+        setupCompleted = false;
         setUp();
     }
 
@@ -154,13 +164,14 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
         intent.putExtra("account", account);
         intent.putExtra("modeInt", mode.ordinal());
-        startActivity(intent);
-        // TODO reboot は AccountSettings で行う。
+        startActivityForResult(intent, AccountSettingsActivity.REQUEST_CODE);
     }
 
     public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
-        if (requestCode == 1) {
-            setUp();
+        if (requestCode == AccountSettingsActivity.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                setupCompleted = false;
+            }
         }
     }
 }
