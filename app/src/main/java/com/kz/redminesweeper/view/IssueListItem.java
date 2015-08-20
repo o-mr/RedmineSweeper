@@ -2,14 +2,20 @@ package com.kz.redminesweeper.view;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kz.redminesweeper.MainActivity;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.bean.Issue;
 
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -18,6 +24,9 @@ public class IssueListItem extends LinearLayout {
 
     @ViewById
     TextView trackerLabel;
+
+    @ViewById
+    ImageView trackerCheck;
 
     @ViewById
     TextView priorityLabel;
@@ -33,6 +42,8 @@ public class IssueListItem extends LinearLayout {
 
     @ViewById
     TextView createdInfoLabel;
+
+    private Issue issue;
 
     public IssueListItem(Context context) {
         super(context);
@@ -56,6 +67,19 @@ public class IssueListItem extends LinearLayout {
         descriptionLabel.setText(issue.getDescription());
         String createdDate = DateFormat.format(getContext().getString(R.string.date_format), issue.getCreated_on()).toString();
         createdInfoLabel.setText(getContext().getString(R.string.created_info_label, issue.getAuthor().getName(), createdDate));
+        this.issue = issue;
+    }
+
+    @Click({R.id.tracker_label, R.id.tracker_check})
+    public void editIssues() {
+        if (trackerLabel.getVisibility() == VISIBLE) {
+            trackerLabel.setVisibility(GONE);
+            trackerCheck.setVisibility(VISIBLE);
+        } else {
+            trackerLabel.setVisibility(VISIBLE);
+            trackerCheck.setVisibility(GONE);
+        }
+        Toast.makeText(getContext(), issue.getTracker().getName(), Toast.LENGTH_SHORT).show();
     }
 
 }

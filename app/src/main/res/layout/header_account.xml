@@ -46,7 +46,7 @@
             android:id="@+id/mode_change_button"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:background="@drawable/navigation_mode_change_button"
+            android:background="@drawable/bt_change_navigation_mode"
             />
 
     </LinearLayout>

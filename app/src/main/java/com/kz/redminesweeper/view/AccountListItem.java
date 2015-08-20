@@ -1,15 +1,13 @@
 package com.kz.redminesweeper.view;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kz.redminesweeper.AccountSettingsActivity;
 import com.kz.redminesweeper.MainActivity;
-import com.kz.redminesweeper.MainActivity_;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.account.Account;
 
@@ -56,7 +54,7 @@ public class AccountListItem extends LinearLayout {
 
     @Click(R.id.edit_button)
     public void editAccount() {
-        ((MainActivity)getContext()).startAccountSettings(account);
+        ((MainActivity)getContext()).startAccountSettings(account, AccountSettingsActivity.Mode.EDIT);
     }
 
 }

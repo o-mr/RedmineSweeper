@@ -26,7 +26,7 @@
         android:gravity="center|left"
         android:textSize="16dp"
         android:textColor="@color/text_standard"
-        android:text="@string/add_account_label"
+        android:text="@string/label_list_add_account"
         android:focusableInTouchMode="false"
         android:focusable="false"
         />

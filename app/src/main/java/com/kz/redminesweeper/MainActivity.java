@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -27,6 +28,8 @@ import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.fragment.IssueListFragment;
 import com.kz.redminesweeper.fragment.NavigationFragment;
+import com.kz.redminesweeper.view.BlankWall;
+import com.kz.redminesweeper.view.BlankWall_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     RmSApplication app;
 
     @ViewById
-    DrawerLayout drawerLayout;
+    DrawerLayout baseLayout;
 
     @ViewById
     FrameLayout navigationFrame;
@@ -59,8 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @ViewById
     PagerTabStrip pagerTab;
 
-    @ViewById
-    TextView title;
+    BlankWall title;
 
     private boolean setupCompleted;
 
@@ -69,16 +71,21 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @AfterViews
     public void init() {
         getSupportActionBar().hide();
+        title = BlankWall_.build(this);
+        title.show(baseLayout);
     }
 
     public void setUp() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (setupCompleted) return;
         Account account = app.getAccountManager().getEnableAccount();
-        if (account == null) account = new Account();
+        AccountSettingsActivity.Mode mode = AccountSettingsActivity.Mode.SIGN_IN;
+        if (account == null) {
+            account = new Account();
+            mode = AccountSettingsActivity.Mode.ADD_FIRST;
+        }
         if (account.getPassword().length() == 0) {
-            Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
-            intent.putExtra("account", account);
-            startActivity(intent);
+            startAccountSettings(account, mode);
         } else {
             app.setUpRedmineRestService(account);
             createIssueListPager();
@@ -104,11 +111,11 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
 
     void createNavigation() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        baseLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         FragmentManager fManager = getSupportFragmentManager();
         FragmentTransaction fTran = fManager.beginTransaction();
         NavigationFragment navigationFragment = NavigationFragment.newInstance();
-        navigationFragment.setDrawer(drawerLayout, navigationFrame);
+        navigationFragment.setDrawer(baseLayout, navigationFrame);
         fTran.replace(R.id.navigation_frame, navigationFragment);
         fTran.commit();
     }
@@ -142,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @Override
     public void onLoadedIssues(Fragment fragment, Issues issues) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        title.setVisibility(View.GONE);
+        title.hide();
         getSupportActionBar().show();
     }
 
@@ -173,9 +180,11 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         }
     }
 
-    public void startAccountSettings(Account account) {
+    public void startAccountSettings(Account account, AccountSettingsActivity.Mode mode) {
         Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
         intent.putExtra("account", account);
+        intent.putExtra("modeInt", mode.ordinal());
         startActivity(intent);
+        // TODO reboot は AccountSettings で行う。
     }
 }

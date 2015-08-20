@@ -145,6 +145,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     public void clearList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (issueListAdapter == null) return;
+        listView.clearChoices();
         isLoaded = false;
         issueListAdapter.clear();
         offset = 0;

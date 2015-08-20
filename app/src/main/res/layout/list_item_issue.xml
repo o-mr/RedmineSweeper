@@ -5,27 +5,37 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:descendantFocusability="blocksDescendants"
     >
 
     <TextView
         android:id="@+id/tracker_label"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/filter_label"
+        android:background="@drawable/lb_list_item_issue"
+        android:layout_margin="16dp"
         android:gravity="center"
         android:textSize="10dp"
         android:textColor="@color/text_reversal"
         android:text="XX"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
         />
+
+        <ImageView
+            android:id="@+id/tracker_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_checkbox_marked_circle_grey600_48dp"
+            android:layout_margin="16dp"
+            android:gravity="center"
+            android:visibility="gone"
+            />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_margin="16dp"
         >
 
         <LinearLayout
@@ -89,7 +99,7 @@
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:layout_marginRight="8dp"
-                android:background="@drawable/corner_round_label"
+                android:background="@drawable/lb_corner_round"
                 android:textSize="10dp"
                 android:textColor="@color/text_reversal"
                 android:text="XXXX"

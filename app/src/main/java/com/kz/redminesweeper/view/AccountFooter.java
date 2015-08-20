@@ -3,6 +3,7 @@ package com.kz.redminesweeper.view;
 import android.content.Context;
 import android.widget.LinearLayout;
 
+import com.kz.redminesweeper.AccountSettingsActivity;
 import com.kz.redminesweeper.MainActivity;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.account.Account;
@@ -19,7 +20,7 @@ public class AccountFooter extends LinearLayout {
 
     @Click(R.id.base_layout)
     public void addNewAccount() {
-        ((MainActivity)getContext()).startAccountSettings(new Account());
+        ((MainActivity)getContext()).startAccountSettings(new Account(), AccountSettingsActivity.Mode.ADD);
     }
 
 }

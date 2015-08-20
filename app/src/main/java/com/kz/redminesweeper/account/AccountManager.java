@@ -22,6 +22,8 @@ public class AccountManager {
     @Pref
     SharedPreferences_ prefs;
 
+    private static int idSeq;
+
     private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     private static final Type JSON_OBJECT_TYPE = new TypeToken<ArrayList<Account>>() {}.getType();
@@ -32,7 +34,9 @@ public class AccountManager {
         Log.e(getClass().getName(), accountsJson);
         try {
             accounts = GSON.fromJson(accountsJson, JSON_OBJECT_TYPE);
-            accounts.size(); //NPE
+            for (Account account : accounts) {
+                idSeq = Math.max(account.getId(), idSeq);
+            }
         } catch (Exception e) {
             Log.e(getClass().getName(), accountsJson, e);
             accounts = new ArrayList<>();
@@ -54,6 +58,7 @@ public class AccountManager {
         }
         int index = accounts.indexOf(account);
         if (index < 0) {
+            account.setId(++idSeq);
             accounts.add(account);
         } else {
             accounts.set(index, account);
@@ -63,6 +68,9 @@ public class AccountManager {
 
     public synchronized void removeAccount(Account account) {
         accounts.remove(account);
+        if (account.isEnable()) {
+            accounts.get(0).setEnable(true);
+        }
         saveAccounts();
     }
 
@@ -75,10 +83,11 @@ public class AccountManager {
     }
 
     public synchronized Account getEnableAccount() {
+        if (accounts.size() == 0) return null;
         for (Account account : accounts) {
             if (account.isEnable()) return account;
         }
-        return null;
+        return accounts.get(0);
     }
 
     public synchronized int indexOfEnableAccount() {

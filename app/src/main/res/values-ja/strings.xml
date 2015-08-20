@@ -23,7 +23,7 @@
 
     <string name="filter_watch">ウォッチ中のチケット</string>
 
-    <string name="account_settings_title">Redmine アカウント認証</string>
+    <string name="account_settings_title">Redmine アカウント設定</string>
 
     <string name="hint_url_text">http://example.com/redmine</string>
 
@@ -33,14 +33,30 @@
 
     <string name="hint_password_save_check">パスワードを保存する</string>
 
-    <string name="sign_in_button_label">サインイン</string>
+    <string name="label_button_sign_in">サインイン</string>
 
-    <string name="start_redmine_sweeper_label">Redmine Sweeperをスタート</string>
+    <string name="label_button_update">アカウントを更新</string>
 
-    <string name="add_account_label">アカウントを追加</string>
+    <string name="label_button_delete">アカウントを削除</string>
 
-    <string name="progress_dialog_auth_msg">認証処理を行っています</string>
+    <string name="label_start_redmine_sweeper">Redmine Sweeperを\n始めましょう</string>
 
+    <string name="label_start_redmine_sweeper_sub">Redmine Sweeperは\nシンプルなRedmineクライアントです。\nまずはアカウントを設定してください。</string>
 
+    <string name="label_list_add_account">アカウントを追加</string>
+
+    <string name="dialog_msg_dialog_auth">認証処理を行っています</string>
+
+    <string name="dialog_button_ok">OK</string>
+
+    <string name="dialog_button_cancel">キャンセル</string>
+
+    <string name="dialog_title_rms_finish">認証が完了していません</string>
+
+    <string name="dialog_msg_rms_finish">Redmine Sweeperを終了してもよろしいですか？</string>
+
+    <string name="dialog_title_delete_account">アカウント削除の確認n</string>
+
+    <string name="dialog_msg_delete_account">このアカウントを削除してもよろしいですか？</string>
 
 </resources>

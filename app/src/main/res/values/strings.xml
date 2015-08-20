@@ -23,7 +23,7 @@
 
     <string name="filter_watch">Watching</string>
 
-    <string name="account_settings_title">Redmine Account Authentication</string>
+    <string name="account_settings_title">Redmine Account Settings</string>
 
     <string name="hint_url_text">http://example.com/redmine</string>
 
@@ -33,12 +33,30 @@
 
     <string name="hint_password_save_check">You want to save the password</string>
 
-    <string name="sign_in_button_label">sign in</string>
+    <string name="label_button_sign_in">sign in</string>
 
-    <string name="start_redmine_sweeper_label">Start Redmine Sweeper</string>
+    <string name="label_button_update">update account</string>
 
-    <string name="add_account_label">Add account</string>
+    <string name="label_button_delete">delete account</string>
 
-    <string name="progress_dialog_auth_msg">It is running an authentication process</string>
+    <string name="label_start_redmine_sweeper">Let\'s start Redmine Sweeper</string>
+
+    <string name="label_start_redmine_sweeper_sub"></string>
+
+    <string name="label_list_add_account">Add account</string>
+
+    <string name="dialog_msg_dialog_auth">It is running an authentication process</string>
+
+    <string name="dialog_button_ok">OK</string>
+
+    <string name="dialog_button_cancel">CANCEL</string>
+
+    <string name="dialog_title_rms_finish">No authentication is complete</string>
+
+    <string name="dialog_msg_rms_finish">Are you sure you want to exit the Redmine Sweeper?</string>
+
+    <string name="dialog_title_delete_account">Account deletion confirmation</string>
+
+    <string name="dialog_msg_delete_account">Are you sure you want to delete this account?</string>
 
 </resources>

@@ -8,7 +8,10 @@ import org.androidannotations.annotations.EBean;
 import java.io.Serializable;
 
 @EBean
-public class Account implements Serializable {
+public class Account implements Serializable, Cloneable {
+
+    @Expose
+    private int id = -1;
 
     @Expose
     private String rootUrl = "";
@@ -30,6 +33,14 @@ public class Account implements Serializable {
 
     @Expose
     private User user;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getRootUrl() {
         return rootUrl;
@@ -94,12 +105,25 @@ public class Account implements Serializable {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (!(obj instanceof Account)) return false;
-        return obj.toString().equals(toString());
+        return id == ((Account)obj).id;
     }
 
     @Override
     public String toString() {
         return loginId + "@" + rootUrl.replaceAll(".*//", "");
+    }
+
+    @Override
+    public Account clone() {
+        Account clone = new Account();
+        clone.id = id;
+        clone.rootUrl = rootUrl;
+        clone.loginId = loginId;
+        clone._perpetuationPassword = _perpetuationPassword;
+        clone.enable = enable;
+        clone.savePassword = savePassword;
+        clone.user = user;
+        return clone;
     }
 
 }
