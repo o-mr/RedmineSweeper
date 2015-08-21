@@ -38,7 +38,6 @@ public class AccountManager {
                 idSeq = Math.max(account.getId(), idSeq);
             }
         } catch (Exception e) {
-            Log.e(getClass().getName(), accountsJson, e);
             accounts = new ArrayList<>();
         }
     }

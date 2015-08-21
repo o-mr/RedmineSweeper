@@ -5,193 +5,192 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/settings_title"
+    android:background="@color/bg_standard"
     >
 
-    <TextView
-        android:id="@+id/title_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_gravity="center"
-        android:textSize="16dp"
-        android:textColor="@color/text_reversal"
-        android:text="@string/account_settings_title"
-        />
-
-    <LinearLayout
-        android:orientation="vertical"
+    <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_standard"
-        >
+     >
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:src="@drawable/ic_web_grey600_24dp"
-                />
-
-            <EditText
-                android:id="@+id/url_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_url_text"
-                android:inputType="textUri"
-                android:textColor="@color/text_standard"
-                android:textColorHint="@color/text_hint"
-             />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/url_error_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="48dp"
-            android:textSize="16dp"
-            android:textColor="@color/text_error"
-            />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:src="@drawable/ic_account_circle_grey600_24dp"
-                />
-
-            <EditText
-                android:id="@+id/login_id_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_login_id_text"
-                android:inputType="textEmailAddress"
-                android:textColor="@color/text_standard"
-                android:textColorHint="@color/text_hint"
-                />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/login_id_error_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="48dp"
-            android:textSize="16dp"
-            android:textColor="@color/text_error"
-            />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="8dp"
-                android:src="@drawable/ic_key_grey600_24dp"
-                />
-
-            <EditText
-                android:id="@+id/password_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_password_text"
-                android:inputType="textPassword"
-                android:textColor="@color/text_standard"
-                android:textColorHint="@color/text_hint"
-                />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/password_error_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="48dp"
-            android:textSize="16dp"
-            android:textColor="@color/text_error"
-            />
-
-        <CheckBox
-            android:id="@+id/save_password_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/hint_password_save_check"
-            android:checked="true"
-            android:textColor="@color/text_standard"
-            />
-
-        <Button
-            android:id="@+id/sign_in_button"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="16dp"
-            android:background="@color/settings_title"
-            android:textSize="16dp"
-            android:textColor="@color/text_reversal"
-            android:text="@string/label_button_sign_in"
-            android:visibility="gone"
-            />
-
-        <LinearLayout
-            android:id="@+id/edit_button_group"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/bg_standard"
             >
 
-            <Button
-                android:id="@+id/delete_button"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="16dp"
-                android:background="@color/settings_title"
-                android:textSize="12dp"
-                android:textColor="@color/text_reversal"
-                android:text="@string/label_button_delete"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/ic_web_grey600_24dp"
+                    />
+
+                <EditText
+                    android:id="@+id/url_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_url_text"
+                    android:inputType="textUri"
+                    android:textColor="@color/text_standard"
+                    android:textColorHint="@color/text_hint"
+                 />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/url_error_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="48dp"
+                android:textSize="16dp"
+                android:textColor="@color/text_error"
+                />
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/ic_account_circle_grey600_24dp"
+                    />
+
+                <EditText
+                    android:id="@+id/login_id_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_login_id_text"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/text_standard"
+                    android:textColorHint="@color/text_hint"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/login_id_error_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="48dp"
+                android:textSize="16dp"
+                android:textColor="@color/text_error"
+                />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="8dp"
+                    android:src="@drawable/ic_key_grey600_24dp"
+                    />
+
+                <EditText
+                    android:id="@+id/password_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_password_text"
+                    android:inputType="textPassword"
+                    android:textColor="@color/text_standard"
+                    android:textColorHint="@color/text_hint"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/password_error_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp"
+                android:textSize="16dp"
+                android:textColor="@color/text_error"
+                />
+
+            <CheckBox
+                android:id="@+id/save_password_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/hint_password_save_check"
+                android:checked="true"
+                android:textColor="@color/text_standard"
                 />
 
             <Button
-                android:id="@+id/update_button"
+                android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_margin="16dp"
                 android:background="@color/settings_title"
-                android:textSize="12dp"
+                android:textSize="16dp"
                 android:textColor="@color/text_reversal"
-                android:text="@string/label_button_update"
-                android:layout_weight="1"
+                android:text="@string/label_button_sign_in"
+                android:visibility="gone"
                 />
+
+            <LinearLayout
+                android:id="@+id/edit_button_group"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <Button
+                    android:id="@+id/delete_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="16dp"
+                    android:background="@color/settings_title"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_reversal"
+                    android:text="@string/label_button_delete"
+                    android:layout_weight="1"
+                    />
+
+                <Button
+                    android:id="@+id/update_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="16dp"
+                    android:background="@color/settings_title"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_reversal"
+                    android:text="@string/label_button_update"
+                    android:layout_weight="1"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

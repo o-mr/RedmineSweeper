@@ -179,7 +179,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     void authFailed() {
         urlErrorLabel.setText("error");
         progressDialog.dismiss();
-        if (mode == Mode.SIGN_IN ) {
+        if (mode == Mode.SIGN_IN) {
             title.hide();
         }
     }
@@ -206,27 +206,28 @@ public class AccountSettingsActivity extends AppCompatActivity {
         String url = urlText.getText().toString();
         String loginId = loginIdText.getText().toString();
         String password = passwordText.getText().toString();
-        return url.length()  > 0 && loginId.length()  > 0 && password.length() > 0;
+        return url.length() > 0 && loginId.length() > 0 && password.length() > 0;
     }
 
     private void createProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage(getString(R.string.dialog_msg_dialog_auth));
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
     }
 
     private void showWelcome() {
-        getSupportActionBar().hide();
+        title = BlankWall_.build(this);
         title.setTitle(R.string.label_start_redmine_sweeper);
         title.setSubTitle(R.string.label_start_redmine_sweeper_sub);
         title.setClickHide(true);
+        title.setHideActionBar(true);
         title.show(baseLayout);
     }
 
     private void showTitle() {
-        getSupportActionBar().hide();
         title = BlankWall_.build(this);
+        title.setHideActionBar(true);
         title.show(baseLayout);
     }
 

@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
 
     IssueListPagerAdapter issueListPagerAdapter;
 
+    private NavigationFragment navigationFragment;
+
     @Override
     protected void onStart() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        getSupportActionBar().show();
+        actionBar.show();
     }
 
     void createNavigation() {
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     public void onFilterSelected(IssuesFilter filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         BackgroundExecutor.cancelAll("", true);
-        setTitle();
+        setTheme(filter);
         if (issueListPagerAdapter == null) {
             createIssueListPager();
         } else {
@@ -133,14 +135,17 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
     }
 
-    public void setTitle() {
+    public void setTheme(IssuesFilter filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        getSupportActionBar().setTitle(app.getFilter().getName());
-        Drawable drawable = getDrawableById(app.getFilter().getColorId());
-        getSupportActionBar().setBackgroundDrawable(drawable);
-        int color = getResources().getColor(app.getFilter().getColorId());
-        pagerTab.setTextColor(color);
-        pagerTab.setTabIndicatorColor(color);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(app.getFilter().getName());
+        Drawable drawable = getDrawableById(filter.getColorId());
+        actionBar.setBackgroundDrawable(drawable);
+        int color = getResources().getColor(filter.getColorId());
+        pagerTab.setBackgroundColor(color);
+        baseLayout.setBackgroundColor(color);
+       // pagerTab.setTextColor(color);
+        //pagerTab.setTabIndicatorColor(color);
     }
 
     public void reboot() {

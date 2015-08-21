@@ -23,6 +23,7 @@ public class RedmineAuthInterceptor implements ClientHttpRequestInterceptor {
 
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         HttpHeaders headers = request.getHeaders();
+        headers.set("Accept-Encoding", "gzip");
         headers.setAuthorization(new HttpBasicAuthentication(account.getLoginId(), account.getPassword()));
         return execution.execute(request, body);
     }

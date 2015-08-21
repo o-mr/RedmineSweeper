@@ -1,8 +1,10 @@
 package com.kz.redminesweeper.view;
 
 import android.content.Context;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.view.View;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +21,9 @@ import org.androidannotations.annotations.ViewById;
 public class BlankWall extends LinearLayout {
 
     @ViewById
+    LinearLayout baseLayout;
+
+    @ViewById
     TextView freeLabel;
 
     @ViewById
@@ -27,6 +32,8 @@ public class BlankWall extends LinearLayout {
     ViewGroup parent;
 
     boolean clickHide;
+
+    boolean hideActionBar;
 
     public BlankWall(Context context) {
         super(context);
@@ -41,17 +48,38 @@ public class BlankWall extends LinearLayout {
     }
 
     public void setTitle(int id) {
+        setTitle(id, 32);
+    }
+
+    public void setTitle(int id, float size) {
         freeLabel.setText(getContext().getString(id));
+        freeLabel.setTextSize(size);
     }
 
     public void setSubTitle(int id) {
+        setSubTitle(id, 16);
+    }
+
+    public void setSubTitle(int id, float size) {
         freeSubLabel.setVisibility(VISIBLE);
         freeSubLabel.setText(getContext().getString(id));
+        freeSubLabel.setTextSize(size);
+    }
+
+    public void setWallColor(int colorId) {
+        baseLayout.setBackgroundColor(getContext().getResources().getColor(colorId));
     }
 
     public void show(ViewGroup view) {
+        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         parent = view;
         parent.addView(this, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        ActionBar actionBar = ((AppCompatActivity)getContext()).getSupportActionBar();
+        if (hideActionBar && actionBar != null) actionBar.hide();
+    }
+
+    public void setHideActionBar(boolean hideActionBar) {
+        this.hideActionBar = hideActionBar;
     }
 
     public void setClickHide(boolean clickHide) {
@@ -65,10 +93,13 @@ public class BlankWall extends LinearLayout {
 
     @UiThread
     public void hide() {
+        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (parent != null) {
             parent.removeView(this);
             parent = null;
         }
+        ActionBar actionBar = ((AppCompatActivity)getContext()).getSupportActionBar();
+        if (hideActionBar && actionBar != null) actionBar.show();
     }
 
     public void setTimer(int timeout_ms) {

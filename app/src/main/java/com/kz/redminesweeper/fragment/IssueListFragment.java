@@ -1,13 +1,12 @@
 package com.kz.redminesweeper.fragment;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,6 +20,8 @@ import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Tracker;
 import com.kz.redminesweeper.bean.Watcher;
+import com.kz.redminesweeper.view.BlankWall;
+import com.kz.redminesweeper.view.BlankWall_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
@@ -41,13 +42,18 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     @FragmentArg
     Project project = new Project();
 
-    private IssueListAdapter issueListAdapter;
-
     @ViewById
     SwipeRefreshLayout refresh;
 
     @ViewById
+    LinearLayout baseLayout;
+
+    @ViewById
     ListView listView;
+
+    BlankWall noTickets;
+
+    private IssueListAdapter issueListAdapter;
 
     private int offset;
 
@@ -62,6 +68,9 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     @AfterViews
     public void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        noTickets = BlankWall_.build(getActivity());
+        noTickets.setTitle(R.string.label_no_tickets, 24);
+        noTickets.setWallColor(R.color.bg_transparency);
         listView.setOnScrollListener(this);
         issueListAdapter = new IssueListAdapter(getActivity(), R.layout.list_item_issue, R.id.base_layout, new ArrayList<Issue>());
         listView.setAdapter(issueListAdapter);
@@ -112,6 +121,9 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         if (getActivity() != null) {
             ((LoadedIssuesCallbacks) getActivity()).onLoadedIssues(this, issues);
         }
+        if (offset == 0) {
+            noTickets.show(baseLayout);
+        }
     }
 
     public static IssueListFragment newInstance(Project project) {
@@ -145,6 +157,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     public void clearList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (issueListAdapter == null) return;
+        noTickets.hide();
         listView.clearChoices();
         isLoaded = false;
         issueListAdapter.clear();

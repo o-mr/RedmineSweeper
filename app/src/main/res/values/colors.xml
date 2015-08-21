@@ -14,6 +14,7 @@
     <color name="text_reversal">#ffffff</color>
     <color name="text_error">#b71c1c</color>
     <color name="text_hint">#cccccc</color>
+    <color name="text_tab">#ffffff</color>
 
     <color name="settings_title">#d32f2f</color>
 

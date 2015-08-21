@@ -119,6 +119,7 @@ public class Account implements Serializable, Cloneable {
         clone.id = id;
         clone.rootUrl = rootUrl;
         clone.loginId = loginId;
+        clone.password = password;
         clone._perpetuationPassword = _perpetuationPassword;
         clone.enable = enable;
         clone.savePassword = savePassword;

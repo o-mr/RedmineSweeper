@@ -41,7 +41,9 @@
 
     <string name="label_start_redmine_sweeper">Let\'s start Redmine Sweeper</string>
 
-    <string name="label_start_redmine_sweeper_sub"></string>
+    <string name="label_start_redmine_sweeper_sub">Redmine Sweeper is a simple Redmine client.\nPlease set the account First.</string>
+
+    <string name="label_no_tickets">No tickets</string>
 
     <string name="label_list_add_account">Add account</string>
 

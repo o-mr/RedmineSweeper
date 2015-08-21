@@ -6,7 +6,7 @@
     android:id="@+id/base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_standard"
+    android:background="@color/theme"
     >
 
     <android.support.v4.view.ViewPager
@@ -19,11 +19,10 @@
             android:id="@+id/pagerTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
             android:layout_gravity="top"
             android:textSize="12dp"
-            android:textColor="@color/theme"
+            android:textColor="@color/text_tab"
+            android:elevation="4dp"
             />
 
     </android.support.v4.view.ViewPager>

@@ -11,7 +11,8 @@
         <activity
             android:name=".AccountSettingsActivity_"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/account_settings_title"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,7 +22,8 @@
             android:name=".MainActivity_"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            >
         </activity>
 
 
