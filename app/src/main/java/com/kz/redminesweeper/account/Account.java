@@ -31,7 +31,6 @@ public class Account implements Serializable, Cloneable {
     @Expose
     private boolean savePassword = true;
 
-    @Expose
     private User user;
 
     public int getId() {
@@ -99,6 +98,10 @@ public class Account implements Serializable, Cloneable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isAuthenticated() {
+        return user != null;
     }
 
     @Override

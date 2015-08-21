@@ -5,10 +5,18 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.kz.redminesweeper.bean.User;
 import com.kz.redminesweeper.prefs.SharedPreferences_;
+import com.kz.redminesweeper.rest.RedmineAuthInterceptor;
+import com.kz.redminesweeper.rest.RedmineRestService;
 
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -16,6 +24,12 @@ import java.util.List;
 
 @EBean(scope = EBean.Scope.Singleton)
 public class AccountManager {
+
+    @RestService
+    RedmineRestService redmine;
+
+    @Bean
+    RedmineAuthInterceptor authInterceptor;
 
     List<Account> accounts;
 
@@ -42,6 +56,40 @@ public class AccountManager {
         }
     }
 
+    public RedmineRestService getRedmine() {
+        return redmine;
+    }
+
+    public void setUpRedmineRestService(Account account) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        redmine.setRootUrl(account.getRootUrl());
+        authInterceptor.setAccount(account);
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+        interceptors.add(authInterceptor);
+        RestTemplate template = redmine.getRestTemplate();
+        template.setInterceptors(interceptors);
+    }
+
+    @Background
+    public void authenticate(Account account, AccountAuthenticator authenticator) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        Account bk = getEnableAccount();
+        try {
+            account.getPassword().length(); //NPE
+            if (!account.isAuthenticated()) {
+                setUpRedmineRestService(account);
+                User user = redmine.getMyUserInfo().getUser();
+                user.getName().length(); //NPE
+                account.setUser(user);
+            }
+            changeEnableAccount(account);
+            authenticator.onAuthSuccessful(account);
+        } catch (Exception e) {
+            setUpRedmineRestService(bk);
+            authenticator.onAuthFailed(account, 1, e);
+        }
+    }
+
     private synchronized void saveAccounts() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         String accountsJson = GSON.toJson(accounts, JSON_OBJECT_TYPE);
@@ -49,7 +97,7 @@ public class AccountManager {
         prefs.getAccountsJson().put(accountsJson);
     }
 
-    public synchronized void putAccount(Account account) {
+    private synchronized void putAccount(Account account) {
         if (account.isSavePassword()) {
             account.set_perpetuationPassword(account.getPassword());
         } else {
@@ -73,7 +121,7 @@ public class AccountManager {
         saveAccounts();
     }
 
-    public synchronized void changeEnableAccount(Account account) {
+    private synchronized void changeEnableAccount(Account account) {
         for (Account a : accounts) {
             a.setEnable(false);
         }
@@ -98,5 +146,10 @@ public class AccountManager {
 
     public List<Account> getAccounts() {
         return accounts;
+    }
+
+    public interface AccountAuthenticator {
+        void onAuthSuccessful(Account account);
+        void onAuthFailed(Account account, int errorno, Exception e);
     }
 }

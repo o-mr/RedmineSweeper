@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kz.redminesweeper.account.Account;
+import com.kz.redminesweeper.account.AccountManager;
 import com.kz.redminesweeper.bean.User;
 import com.kz.redminesweeper.view.BlankWall;
 import com.kz.redminesweeper.view.BlankWall_;
@@ -89,6 +90,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         createProgressDialog();
         switch (mode) {
             case SIGN_IN: setupSignIn(); break;
+            case SWITCH: setupSwitch(); break;
             case ADD: setupAdd(); break;
             case EDIT: setupEdit(); break;
             case FIRST: setUpFirst(); break;
@@ -100,10 +102,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
         showTitle();
         signInButton.setVisibility(View.VISIBLE);
         editButtonGroup.setVisibility(View.GONE);
-        if (account.getPassword().length() == 0) {
-            passwordText.requestFocus();
-            title.setTimer(1000);
+        if (account.getPassword().length() > 0) {
+            onClickSignIn();
         } else {
+            title.setTimer(1000);
+        }
+    }
+
+    private void setupSwitch() {
+        signInButton.setVisibility(View.VISIBLE);
+        editButtonGroup.setVisibility(View.GONE);
+        if (account.getPassword().length() > 0) {
             onClickSignIn();
         }
     }
@@ -133,7 +142,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
         account.setLoginId(loginIdText.getText().toString());
         account.setPassword(passwordText.getText().toString());
         account.setSavePassword(savePasswordCheck.isChecked());
-        authenticate();
+
+        app.getAccountManager().authenticate(account, new AccountManager.AccountAuthenticator() {
+            @Override
+            public void onAuthSuccessful(Account account) {
+                authSuccessful();
+            }
+            @Override
+            public void onAuthFailed(Account account, int errorno, Exception e) {
+                authFailed();
+            }
+        });
     }
 
     @Click({R.id.delete_button})
@@ -152,25 +171,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
             .create().show();
     }
 
-    @Background
-    void authenticate() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        try {
-            app.setUpRedmineRestService(account);
-            User user = app.redmine.getMyUserInfo().getUser();
-            user.getName().length(); //NPE
-            account.setUser(user);
-            account.setEnable(true);
-            authSuccessful();
-        } catch (Exception e) {
-            Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
-            authFailed();
-        }
-    }
-
     @UiThread
     void authSuccessful() {
-        app.getAccountManager().changeEnableAccount(account);
         progressDialog.dismiss();
         startMainActivity();
     }
@@ -231,6 +233,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
         title.show(baseLayout);
     }
 
+    private void showBlank() {
+        title = BlankWall_.build(this);
+        title.setTitle(R.string.label_button_sign_in, 0);
+        title.setHideActionBar(true);
+        title.show(baseLayout);
+    }
+
     private void bind(Account account) {
         urlText.setText(account.getRootUrl());
         loginIdText.setText(account.getLoginId());
@@ -257,7 +266,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     public enum Mode {
-        SIGN_IN, ADD, EDIT, FIRST,
+        SIGN_IN, SWITCH, ADD, EDIT, FIRST,
     }
 
 }

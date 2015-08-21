@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
 
     public void setUp() {
         if (setupCompleted) return;
-        Account account = app.getAccountManager().getEnableAccount();
-        app.setUpRedmineRestService(account);
         createIssueListPager();
         createNavigation();
         createActionBar();
@@ -148,12 +146,28 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         //pagerTab.setTabIndicatorColor(color);
     }
 
-    public void reboot() {
+    public void refresh() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         BackgroundExecutor.cancelAll("", true);
         app.setFilter(null);
         setupCompleted = false;
         setUp();
+    }
+
+    public void startAccountSettings(Account account, AccountSettingsActivity.Mode mode) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
+        intent.putExtra("account", account);
+        intent.putExtra("modeInt", mode.ordinal());
+        startActivityForResult(intent, AccountSettingsActivity.REQUEST_CODE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == AccountSettingsActivity.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                setupCompleted = false;
+            }
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -165,18 +179,4 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         }
     }
 
-    public void startAccountSettings(Account account, AccountSettingsActivity.Mode mode) {
-        Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
-        intent.putExtra("account", account);
-        intent.putExtra("modeInt", mode.ordinal());
-        startActivityForResult(intent, AccountSettingsActivity.REQUEST_CODE);
-    }
-
-    public void onActivityResult( int requestCode, int resultCode, Intent intent ) {
-        if (requestCode == AccountSettingsActivity.REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                setupCompleted = false;
-            }
-        }
-    }
 }

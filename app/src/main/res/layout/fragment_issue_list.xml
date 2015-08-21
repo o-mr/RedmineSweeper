@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refresh"
+    android:id="@+id/base_layout"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-        <LinearLayout
-            android:id="@+id/base_layout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
         <ListView
             android:id="@+id/list_view"
@@ -21,6 +23,6 @@
             android:choiceMode="singleChoice"
             />
 
-    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

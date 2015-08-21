@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.kz.redminesweeper.AccountSettingsActivity;
 import com.kz.redminesweeper.MainActivity;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
 import com.kz.redminesweeper.account.Account;
+import com.kz.redminesweeper.account.AccountManager;
 import com.kz.redminesweeper.adapter.AccountListAdapter;
 import com.kz.redminesweeper.adapter.FilterListAdapter;
 import com.kz.redminesweeper.bean.IssuesFilter;
@@ -74,9 +76,15 @@ public class NavigationFragment extends Fragment {
     @AfterViews
     public void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        accountHeader.bind(app.getAccountManager().getEnableAccount());
         createFilterList();
         createAccountList();
+    }
+
+    @Override
+    public void onStart() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        super.onStart();
+        accountHeader.bind(app.getAccountManager().getEnableAccount());
     }
 
     public void setDrawer(DrawerLayout drawerLayout, FrameLayout navigationFrame) {
@@ -142,19 +150,44 @@ public class NavigationFragment extends Fragment {
     }
 
     @ItemClick(R.id.account_list)
-    void selectAccount(int position) {
+    void selectAccount(final int position) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         accountList.setItemChecked(position, true);
         accountList.setSelection(position);
         Account account = accountListAdapter.getItem(position);
         if (account.equals(app.getAccountManager().getEnableAccount())) return;
-        mDrawerLayout.closeDrawer(mNavigationFrame);
-        app.getAccountManager().changeEnableAccount(account);
-        ((MainActivity)getActivity()).reboot();
+        //mDrawerLayout.closeDrawer(mNavigationFrame);
+        app.getAccountManager().authenticate(account, new AccountManager.AccountAuthenticator() {
+            @Override
+            public void onAuthSuccessful(Account account) {
+                authSuccessful(position);
+            }
+
+            @Override
+            public void onAuthFailed(Account account, int errorno, Exception e) {
+                authFailed(account);
+            }
+        });
+    }
+
+    @UiThread
+    void authSuccessful(int position) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.refresh();
+        }
+    }
+
+    @UiThread
+    void authFailed(Account account) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            mainActivity.startAccountSettings(account, AccountSettingsActivity.Mode.SWITCH);
+        }
     }
 
     @Click(R.id.account_header)
-    void showAccountSettings() {
+    void switchNavigation() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (accountList.getVisibility() == View.VISIBLE) {
             accountList.setVisibility(View.GONE);

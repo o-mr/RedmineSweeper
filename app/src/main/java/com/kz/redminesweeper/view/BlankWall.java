@@ -71,7 +71,6 @@ public class BlankWall extends LinearLayout {
     }
 
     public void show(ViewGroup view) {
-        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         parent = view;
         parent.addView(this, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         ActionBar actionBar = ((AppCompatActivity)getContext()).getSupportActionBar();
@@ -93,7 +92,6 @@ public class BlankWall extends LinearLayout {
 
     @UiThread
     public void hide() {
-        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (parent != null) {
             parent.removeView(this);
             parent = null;
