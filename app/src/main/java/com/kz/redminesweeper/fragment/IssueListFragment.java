@@ -55,9 +55,11 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
 
     private IssueListAdapter issueListAdapter;
 
+    private IssuesFilter filter;
+
     private int offset;
 
-    private int totalCount = -1;
+    private int totalCount;
 
     private boolean isLoading;
 
@@ -78,21 +80,20 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         refresh.setOnRefreshListener(this);
     }
 
-    void downloadIssues() {
+    void startDownloadIssues() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (isLoading) return;
         if (isLoaded) return;
-        if (app.getFilter() == null) return;
+        if (filter == null) return;
         refresh.setRefreshing(true);
-        isLoading = true;
-        downloadIssuesAsync();
+        downloadIssues();
     }
 
     @Background
-    void downloadIssuesAsync() {
+    void downloadIssues() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        isLoading = true;
         Issues issues = null;
-        IssuesFilter filter = app.getFilter();
         if (filter instanceof Status) {
             issues = app.getRedmine().getMyIssuesByProjectIdAndStatusId(project.getId(), filter.getId(), offset, LIMIT);
         } else if (filter instanceof Tracker) {
@@ -106,7 +107,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     @UiThread
     void updateIssueList(Issues issues) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        if (issueListAdapter.getCount() == 0) {
+        if (offset == 0) {
             totalCount = issues.getTotal_count();
         }
         offset += issues.getIssues().size();
@@ -116,29 +117,41 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         }
         issueListAdapter.addAll(issues.getIssues());
         issueListAdapter.notifyDataSetChanged();
-        refresh.setRefreshing(false);
-        isLoading = false;
-        if (getActivity() != null) {
-            ((LoadedIssuesCallbacks) getActivity()).onLoadedIssues(this, issues);
-        }
         if (offset == 0) {
             noTickets.show(baseLayout);
         }
-    }
-
-    public static IssueListFragment newInstance(Project project) {
-        return IssueListFragment_.builder().project(project).build();
+        refresh.setRefreshing(false);
+        isLoading = false;
+        if (getActivity() == null) return;
+        ((IssueListCallbacks) getActivity()).onLoadedIssues(this, issues);
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void onRefresh() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        if (issueListAdapter == null) return;
+        noTickets.hide();
+        listView.clearChoices();
+        isLoaded = false;
+        issueListAdapter.clear();
+        offset = 0;
+        startDownloadIssues();
     }
+
+    public void onChangeFilter(IssuesFilter filter) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        this.filter = filter;
+        onRefresh();
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {}
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (totalItemCount > (firstVisibleItem + visibleItemCount) + ((int) LIMIT / 5)) return;
-        downloadIssues();
+        startDownloadIssues();
     }
 
     @Override
@@ -147,28 +160,15 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         Toast.makeText(getActivity(), issueListAdapter.getItem(position).getSubject(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onRefresh() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        clearList();
-        downloadIssues();
-    }
-
-    public void clearList() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        if (issueListAdapter == null) return;
-        noTickets.hide();
-        listView.clearChoices();
-        isLoaded = false;
-        issueListAdapter.clear();
-        offset = 0;
-    }
-
     public int getTotalCount() {
         return totalCount;
     }
 
-    public interface LoadedIssuesCallbacks {
+    public static IssueListFragment newInstance(Project project) {
+        return IssueListFragment_.builder().project(project).build();
+    }
+
+    public interface IssueListCallbacks {
         void onLoadedIssues(Fragment fragment,  Issues issues);
     }
 

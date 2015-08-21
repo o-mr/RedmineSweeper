@@ -47,7 +47,7 @@ public class IssueListPagerAdapter extends FragmentStatePagerAdapter {
         for (int i = 0; i < getCount(); i++) {
             try {
                 IssueListFragment fragment = (IssueListFragment)instantiateItem(pager, i);
-                fragment.clearList();
+                fragment.onChangeFilter(filter);
             } catch (Exception e) {
                 Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
             }

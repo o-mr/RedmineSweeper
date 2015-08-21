@@ -3,7 +3,6 @@ package com.kz.redminesweeper;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -14,13 +13,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
-import com.kz.redminesweeper.account.AccountManager;
 import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
 import com.kz.redminesweeper.account.Account;
 import com.kz.redminesweeper.bean.Issues;
@@ -28,13 +23,10 @@ import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.fragment.IssueListFragment;
 import com.kz.redminesweeper.fragment.NavigationFragment;
-import com.kz.redminesweeper.view.BlankWall;
-import com.kz.redminesweeper.view.BlankWall_;
+import com.kz.redminesweeper.view.NavigationToggle;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
@@ -45,7 +37,8 @@ import java.util.List;
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)
-public class MainActivity extends AppCompatActivity implements NavigationFragment.FilterSelectedCallbacks, IssueListFragment.LoadedIssuesCallbacks {
+public class MainActivity extends AppCompatActivity
+        implements NavigationFragment.NavigationCallBacks, IssueListFragment.IssueListCallbacks {
 
     @App
     RmSApplication app;
@@ -62,11 +55,11 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     @ViewById
     PagerTabStrip pagerTab;
 
+    private NavigationToggle drawerToggle;
+
     private boolean setupCompleted;
 
     IssueListPagerAdapter issueListPagerAdapter;
-
-    private NavigationFragment navigationFragment;
 
     @Override
     protected void onStart() {
@@ -78,28 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
     public void setUp() {
         if (setupCompleted) return;
         createIssueListPager();
-        createNavigation();
-        createActionBar();
         setupCompleted = true;
-    }
-
-    void createActionBar() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.show();
-    }
-
-    void createNavigation() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        baseLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        FragmentManager fManager = getSupportFragmentManager();
-        FragmentTransaction fTran = fManager.beginTransaction();
-        NavigationFragment navigationFragment = NavigationFragment.newInstance();
-        navigationFragment.setDrawer(baseLayout, navigationFrame);
-        fTran.replace(R.id.navigation_frame, navigationFragment);
-        fTran.commit();
     }
 
     @Background
@@ -114,42 +86,78 @@ public class MainActivity extends AppCompatActivity implements NavigationFragmen
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         issueListPagerAdapter = new IssueListPagerAdapter(getSupportFragmentManager(), pager, projects);
         pager.setAdapter(issueListPagerAdapter);
+        createActionBar();
+    }
+
+    void createActionBar() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.show();
+        createNavigation();
+    }
+
+    void createNavigation() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        drawerToggle = new NavigationToggle(this, baseLayout);
+        baseLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        FragmentManager fManager = getSupportFragmentManager();
+        FragmentTransaction fTran = fManager.beginTransaction();
+        NavigationFragment navigationFragment = NavigationFragment.newInstance();
+        fTran.replace(R.id.navigation_frame, navigationFragment);
+        fTran.commit();
     }
 
     @Override
-    public void onFilterSelected(IssuesFilter filter) {
+    public void onChangeFilter(IssuesFilter filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        baseLayout.closeDrawer(navigationFrame);
         BackgroundExecutor.cancelAll("", true);
         setTheme(filter);
-        if (issueListPagerAdapter == null) {
-            createIssueListPager();
-        } else {
-            issueListPagerAdapter.updateIssueList(filter);
-        }
+        issueListPagerAdapter.updateIssueList(filter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSwitchAccount(Account account) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        refresh();
+    }
+
+    @Override
+    public void onStartAuthentication(Account account) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        startAccountSettings(account, AccountSettingsActivity.Mode.SWITCH);
     }
 
     @Override
     public void onLoadedIssues(Fragment fragment, Issues issues) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        // TODO
     }
 
     public void setTheme(IssuesFilter filter) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(app.getFilter().getName());
+        actionBar.setTitle(filter.getName());
         Drawable drawable = getDrawableById(filter.getColorId());
         actionBar.setBackgroundDrawable(drawable);
         int color = getResources().getColor(filter.getColorId());
         pagerTab.setBackgroundColor(color);
         baseLayout.setBackgroundColor(color);
-       // pagerTab.setTextColor(color);
-        //pagerTab.setTabIndicatorColor(color);
     }
 
     public void refresh() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        baseLayout.closeDrawer(navigationFrame);
+        issueListPagerAdapter = null;
         BackgroundExecutor.cancelAll("", true);
-        app.setFilter(null);
         setupCompleted = false;
         setUp();
     }

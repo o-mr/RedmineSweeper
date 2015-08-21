@@ -2,16 +2,10 @@ package com.kz.redminesweeper.fragment;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.content.res.Configuration;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.kz.redminesweeper.AccountSettingsActivity;
-import com.kz.redminesweeper.MainActivity;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
 import com.kz.redminesweeper.account.Account;
@@ -25,7 +19,6 @@ import com.kz.redminesweeper.bean.Watcher;
 import com.kz.redminesweeper.view.AccountFooter;
 import com.kz.redminesweeper.view.AccountFooter_;
 import com.kz.redminesweeper.view.AccountHeader;
-import com.kz.redminesweeper.view.NavigationToggle;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
@@ -40,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EFragment(R.layout.fragment_navigation)
-public class NavigationFragment extends Fragment {
+public class NavigationFragment extends Fragment implements AccountManager.AccountAuthenticator {
 
     @App
     RmSApplication app;
@@ -60,17 +53,10 @@ public class NavigationFragment extends Fragment {
 
     private AccountListAdapter accountListAdapter;
 
-    private NavigationToggle mDrawerToggle;
-
-    private DrawerLayout mDrawerLayout;
-
-    private FrameLayout mNavigationFrame;
-
     @Override
     public void onAttach(Activity activity) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         super.onAttach(activity);
-        mDrawerToggle = new NavigationToggle(getActivity(), mDrawerLayout);
     }
 
     @AfterViews
@@ -85,12 +71,6 @@ public class NavigationFragment extends Fragment {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         super.onStart();
         accountHeader.bind(app.getAccountManager().getEnableAccount());
-    }
-
-    public void setDrawer(DrawerLayout drawerLayout, FrameLayout navigationFrame) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        mDrawerLayout = drawerLayout;
-        mNavigationFrame = navigationFrame;
     }
 
     void createFilterList() {
@@ -117,8 +97,18 @@ public class NavigationFragment extends Fragment {
         filterListAdapter = new FilterListAdapter(getActivity(), R.layout.list_item_filter, R.id.base_layout, filters);
         filterList.setAdapter(filterListAdapter);
         filterListAdapter.notifyDataSetChanged();
-        selectFilter(0);
         setHasOptionsMenu(true);
+        selectFilter(0);
+    }
+
+    @ItemClick(R.id.filter_list)
+    void selectFilter(int position) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        filterList.setItemChecked(position, true);
+        filterList.setSelection(position);
+        IssuesFilter filter = filterListAdapter.getItem(position);
+        if (getActivity() == null) return;
+        ((NavigationCallBacks)getActivity()).onChangeFilter(filter);
     }
 
     void createAccountList() {
@@ -131,59 +121,26 @@ public class NavigationFragment extends Fragment {
         selectAccount(app.getAccountManager().indexOfEnableAccount());
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @ItemClick(R.id.filter_list)
-    void selectFilter(int position) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        mDrawerLayout.closeDrawer(mNavigationFrame);
-        filterList.setItemChecked(position, true);
-        filterList.setSelection(position);
-        IssuesFilter filter = filterListAdapter.getItem(position);
-        app.setFilter(filter);
-        ((FilterSelectedCallbacks)getActivity()).onFilterSelected(filter);
-    }
-
     @ItemClick(R.id.account_list)
-    void selectAccount(final int position) {
+    void selectAccount(int position) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         accountList.setItemChecked(position, true);
         accountList.setSelection(position);
         Account account = accountListAdapter.getItem(position);
         if (account.equals(app.getAccountManager().getEnableAccount())) return;
-        //mDrawerLayout.closeDrawer(mNavigationFrame);
-        app.getAccountManager().authenticate(account, new AccountManager.AccountAuthenticator() {
-            @Override
-            public void onAuthSuccessful(Account account) {
-                authSuccessful(position);
-            }
-
-            @Override
-            public void onAuthFailed(Account account, int errorno, Exception e) {
-                authFailed(account);
-            }
-        });
+        app.getAccountManager().authenticate(account, this);
     }
 
-    @UiThread
-    void authSuccessful(int position) {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null) {
-            mainActivity.refresh();
-        }
+    @Override @UiThread
+    public void onAuthSuccessful(Account account) {
+        if (getActivity() == null) return;
+        ((NavigationCallBacks)getActivity()).onSwitchAccount(account);
     }
 
-    @UiThread
-    void authFailed(Account account) {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        if (mainActivity != null) {
-            mainActivity.startAccountSettings(account, AccountSettingsActivity.Mode.SWITCH);
-        }
+    @Override @UiThread
+    public void onAuthFailed(Account account, int errorno, Exception e) {
+        if (getActivity() == null) return;
+        ((NavigationCallBacks) getActivity()).onStartAuthentication(account);
     }
 
     @Click(R.id.account_header)
@@ -199,18 +156,14 @@ public class NavigationFragment extends Fragment {
         accountHeader.changeNavigationMode();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-    }
-
     public static NavigationFragment newInstance() {
         return NavigationFragment_.builder().build();
     }
 
-    public interface FilterSelectedCallbacks {
-        void onFilterSelected(IssuesFilter filter);
+    public interface NavigationCallBacks {
+        void onChangeFilter(IssuesFilter filter);
+        void onSwitchAccount(Account account);
+        void onStartAuthentication(Account account);
     }
 
 }

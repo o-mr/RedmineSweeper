@@ -74,10 +74,10 @@ public class AccountManager {
     public void authenticate(Account account, AccountAuthenticator authenticator) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         Account bk = getEnableAccount();
+        setUpRedmineRestService(account);
         try {
             account.getPassword().length(); //NPE
             if (!account.isAuthenticated()) {
-                setUpRedmineRestService(account);
                 User user = redmine.getMyUserInfo().getUser();
                 user.getName().length(); //NPE
                 account.setUser(user);
