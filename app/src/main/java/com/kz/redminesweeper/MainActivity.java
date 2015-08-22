@@ -15,7 +15,6 @@ import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
 import com.kz.redminesweeper.account.Account;

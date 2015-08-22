@@ -61,7 +61,7 @@
 
     <string name="dialog_msg_delete_account">このアカウントを削除してもよろしいですか？</string>
 
-    <string name="label_msg_error_ntework">ネットワークが無効です。</string>
+    <string name="label_msg_error_network">ネットワークが無効です。</string>
 
     <string name="label_msg_error_rest_timeout">接続がタイムアウトしました。</string>
 

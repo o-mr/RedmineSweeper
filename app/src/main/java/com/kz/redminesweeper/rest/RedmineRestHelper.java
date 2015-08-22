@@ -53,7 +53,7 @@ public class RedmineRestHelper {
                 Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
                 Throwable ecase = e.getCause();
                 if (ecase instanceof ConnectException) {
-                    executor.onFailed(RestError.NETWORK, R.string.label_msg_error_ntework, e);
+                    executor.onFailed(RestError.NETWORK, R.string.label_msg_error_network, e);
                 } else if (e instanceof HttpClientErrorException) {
                     HttpClientErrorException exception = (HttpClientErrorException) e;
                     if (exception.getStatusCode() == HttpStatus.REQUEST_TIMEOUT) {

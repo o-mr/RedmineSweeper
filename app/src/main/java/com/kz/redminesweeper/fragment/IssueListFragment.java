@@ -28,7 +28,6 @@ import com.kz.redminesweeper.view.BlankWall_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.UiThread;

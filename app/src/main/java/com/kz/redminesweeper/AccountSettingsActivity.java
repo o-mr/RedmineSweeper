@@ -60,10 +60,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
     LinearLayout editButtonGroup;
 
     @ViewById
-    Button deleteButton;
+    Button updateButton;
 
     @ViewById
-    TextView urlErrorLabel;
+    Button deleteButton;
 
     @Extra
     Account account;
@@ -89,6 +89,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         }
         bind(account.clone());
         createProgressDialog();
+        onChangeInputValue();
         switch (mode) {
             case SIGN_IN: setupSignIn(); break;
             case SWITCH: setupSwitch(); break;
@@ -97,7 +98,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
             case FIRST: setUpFirst(); break;
             case ERROR: setUpError(); break;
         }
-        onChangeInputValue();
     }
 
     private void setupSignIn() {
@@ -125,8 +125,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     private void setupEdit() {
+        account.setUser(null);
         signInButton.setVisibility(View.GONE);
         editButtonGroup.setVisibility(View.VISIBLE);
+        updateButton.setEnabled(false);
         deleteButton.setEnabled(!account.isEnable());
     }
 
@@ -146,6 +148,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @Click({R.id.sign_in_button, R.id.update_button})
     void onClickSignIn() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        clearError();
         progressDialog.show();
         account.setRootUrl(urlText.getText().toString());
         account.setLoginId(loginIdText.getText().toString());
@@ -189,11 +192,28 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     @UiThread
     void authFailed(int msgId) {
-        urlErrorLabel.setText(getString(msgId));
+        String msg = getString(msgId);
+        if (msgId == R.string.label_msg_error_network ||
+            msgId == R.string.label_msg_error_rest_timeout ||
+            msgId == R.string.label_msg_error_page_not_found ||
+            msgId == R.string.label_msg_error_rest_failed) {
+            urlText.setError(msg);
+            urlText.requestFocus();
+        } else if (msgId == R.string.label_msg_error_auth_failed) {
+            loginIdText.setError(msg);
+            passwordText.setError(msg);
+            loginIdText.requestFocus();
+        }
         progressDialog.dismiss();
         if (mode == Mode.SIGN_IN || mode == Mode.ERROR) {
             title.hide();
         }
+    }
+
+    private void clearError() {
+        urlText.setError(null);
+        loginIdText.setError(null);
+        passwordText.setError(null);
     }
 
     void startMainActivity() {
@@ -211,7 +231,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
     void onChangeInputValue() {
         boolean enabled = isInputCompletion();
         signInButton.setEnabled(enabled);
-        urlErrorLabel.setText("");
+        updateButton.setEnabled(enabled);
+        clearError();
     }
 
     private boolean isInputCompletion() {

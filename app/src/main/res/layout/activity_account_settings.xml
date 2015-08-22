@@ -43,6 +43,7 @@
                     android:id="@+id/url_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:hint="@string/hint_url_text"
                     android:inputType="textUri"
                     android:textColor="@color/text_standard"
@@ -50,17 +51,6 @@
                  />
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/url_error_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="48dp"
-                android:textSize="12dp"
-                android:textColor="@color/text_error"
-                />
-
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -82,22 +72,13 @@
                     android:id="@+id/login_id_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
                     android:hint="@string/hint_login_id_text"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/text_standard"
                     android:textColorHint="@color/text_hint"
                     />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/login_id_error_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="48dp"
-                android:textSize="12dp"
-                android:textColor="@color/text_error"
-                />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -126,20 +107,11 @@
                     />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/password_error_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="48dp"
-                android:textSize="12dp"
-                android:textColor="@color/text_error"
-                />
-
             <CheckBox
                 android:id="@+id/save_password_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="45dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/hint_password_save_check"
                 android:checked="true"
