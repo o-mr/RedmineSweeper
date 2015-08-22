@@ -16,6 +16,8 @@ import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Trackers;
 import com.kz.redminesweeper.bean.Watcher;
+import com.kz.redminesweeper.rest.RedmineRestHelper;
+import com.kz.redminesweeper.rest.RedmineRestService;
 import com.kz.redminesweeper.view.AccountFooter;
 import com.kz.redminesweeper.view.AccountFooter_;
 import com.kz.redminesweeper.view.AccountHeader;
@@ -53,6 +55,8 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
 
     private AccountListAdapter accountListAdapter;
 
+    private NavigationCallBacks navigationCallBacks;
+
     @Override
     public void onAttach(Activity activity) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
@@ -60,7 +64,7 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
     }
 
     @AfterViews
-    public void setUp() {
+    void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         createFilterList();
         createAccountList();
@@ -84,11 +88,24 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
     }
 
     @Background
-    void downloadFilter(List<IssuesFilter> filters) {
+    void downloadFilter(final List<IssuesFilter> filters) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        Trackers trackers = app.getRedmine().getTrackers();
-        filters.addAll(trackers.getTrackers());
-        updateFilterList(filters);
+        app.getRedmine().executeRest(new RedmineRestHelper.RestExecutor<Trackers>() {
+            @Override
+            public Trackers execute(RedmineRestService redmine) {
+                return redmine.getTrackers();
+            }
+
+            @Override
+            public void onSuccessful(Trackers result) {
+                filters.addAll(result.getTrackers());
+                updateFilterList(filters);
+            }
+
+            @Override
+            public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
+            }
+        });
     }
 
     @UiThread
@@ -107,8 +124,8 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
         filterList.setItemChecked(position, true);
         filterList.setSelection(position);
         IssuesFilter filter = filterListAdapter.getItem(position);
-        if (getActivity() == null) return;
-        ((NavigationCallBacks)getActivity()).onChangeFilter(filter);
+        if (navigationCallBacks == null) return;
+        navigationCallBacks .onChangeFilter(filter);
     }
 
     void createAccountList() {
@@ -133,14 +150,14 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
 
     @Override @UiThread
     public void onAuthSuccessful(Account account) {
-        if (getActivity() == null) return;
-        ((NavigationCallBacks)getActivity()).onSwitchAccount(account);
+        if (navigationCallBacks == null) return;
+        navigationCallBacks.onSwitchAccount(account);
     }
 
     @Override @UiThread
-    public void onAuthFailed(Account account, int errorno, Exception e) {
-        if (getActivity() == null) return;
-        ((NavigationCallBacks) getActivity()).onStartAuthentication(account);
+    public void onAuthFailed(Account account, int errorNo, int msId, Throwable e) {
+        if (navigationCallBacks == null) return;
+        navigationCallBacks.onStartAuthentication(account);
     }
 
     @Click(R.id.account_header)
@@ -164,6 +181,10 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
         void onChangeFilter(IssuesFilter filter);
         void onSwitchAccount(Account account);
         void onStartAuthentication(Account account);
+    }
+
+    public void setNavigationCallBacks(NavigationCallBacks navigationCallBacks) {
+        this.navigationCallBacks = navigationCallBacks;
     }
 
 }

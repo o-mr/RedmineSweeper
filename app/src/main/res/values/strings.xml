@@ -61,4 +61,14 @@
 
     <string name="dialog_msg_delete_account">Are you sure you want to delete this account?</string>
 
+
+    <string name="label_msg_error_rest_timeout">接続がタイムアウトしました。</string>
+
+    <string name="label_msg_error_page_not_found">ページが見つかりませんでした。</string>
+
+    <string name="label_msg_error_auth_failed">認証に失敗しました。</string>
+
+    <string name="label_msg_error_rest_failed">接続に失敗しました。</string>
+
+
 </resources>

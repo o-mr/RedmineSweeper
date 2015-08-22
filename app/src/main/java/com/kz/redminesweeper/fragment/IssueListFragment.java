@@ -20,6 +20,8 @@ import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Tracker;
 import com.kz.redminesweeper.bean.Watcher;
+import com.kz.redminesweeper.rest.RedmineRestHelper;
+import com.kz.redminesweeper.rest.RedmineRestService;
 import com.kz.redminesweeper.view.BlankWall;
 import com.kz.redminesweeper.view.BlankWall_;
 
@@ -89,19 +91,33 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         downloadIssues();
     }
 
-    @Background
     void downloadIssues() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         isLoading = true;
-        Issues issues = null;
-        if (filter instanceof Status) {
-            issues = app.getRedmine().getMyIssuesByProjectIdAndStatusId(project.getId(), filter.getId(), offset, LIMIT);
-        } else if (filter instanceof Tracker) {
-            issues = app.getRedmine().getMyIssuesByProjectIdAndTrackerId(project.getId(), filter.getId(), offset, LIMIT);
-        } else if (filter instanceof Watcher) {
-            issues = app.getRedmine().getIssuesByProjectIdAndWatcherId(project.getId(), filter.getId(), offset, LIMIT);
-        }
-        updateIssueList(issues);
+        app.getRedmine().executeRest(new RedmineRestHelper.RestExecutor<Issues>() {
+            @Override
+            public Issues execute(RedmineRestService redmine) {
+                if (filter instanceof Status) {
+                    return redmine.getMyIssuesByProjectIdAndStatusId(project.getId(), filter.getId(), offset, LIMIT);
+                } else if (filter instanceof Tracker) {
+                    return redmine.getMyIssuesByProjectIdAndTrackerId(project.getId(), filter.getId(), offset, LIMIT);
+                } else if (filter instanceof Watcher) {
+                    return redmine.getIssuesByProjectIdAndWatcherId(project.getId(), filter.getId(), offset, LIMIT);
+                } else {
+                    return null;
+                }
+            }
+
+            @Override
+            public void onSuccessful(Issues result) {
+                updateIssueList(result);
+            }
+
+            @Override
+            public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
+            }
+
+        });
     }
 
     @UiThread

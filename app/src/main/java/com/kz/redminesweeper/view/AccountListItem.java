@@ -7,19 +7,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kz.redminesweeper.AccountSettingsActivity;
-import com.kz.redminesweeper.MainActivity;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
 import com.kz.redminesweeper.account.Account;
-import com.kz.redminesweeper.account.AccountManager;
-import com.kz.redminesweeper.bean.IssuesFilter;
 
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ItemClick;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.list_item_account)
@@ -64,7 +58,13 @@ public class AccountListItem extends LinearLayout {
 
     @Click(R.id.edit_button)
     public void editAccount() {
-        ((MainActivity)getContext()).startAccountSettings(account, AccountSettingsActivity.Mode.EDIT);
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        if (getContext() == null) return;
+        ((AccountListItemListener)getContext()).onEditAccount(account);
+    }
+
+    public interface AccountListItemListener {
+        void onEditAccount(Account account);
     }
 
 }

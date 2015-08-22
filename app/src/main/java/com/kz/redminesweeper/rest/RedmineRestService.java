@@ -11,11 +11,12 @@ import com.kz.redminesweeper.bean.User;
 
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Rest;
+import org.androidannotations.api.rest.RestClientErrorHandling;
 import org.springframework.web.client.RestTemplate;
 
 
 @Rest(converters={RedmineJsonConverter.class}, interceptors = {RedmineAuthInterceptor.class})
-public interface RedmineRestService {
+public interface RedmineRestService extends RestClientErrorHandling {
 
     RestTemplate getRestTemplate();
 

@@ -16,13 +16,11 @@ import android.widget.TextView;
 
 import com.kz.redminesweeper.account.Account;
 import com.kz.redminesweeper.account.AccountManager;
-import com.kz.redminesweeper.bean.User;
 import com.kz.redminesweeper.view.BlankWall;
 import com.kz.redminesweeper.view.BlankWall_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
@@ -148,9 +146,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
             public void onAuthSuccessful(Account account) {
                 authSuccessful();
             }
+
             @Override
-            public void onAuthFailed(Account account, int errorno, Exception e) {
-                authFailed();
+            public void onAuthFailed(Account account, int errorNo, int msgId, Throwable e) {
+                authFailed(msgId);
             }
         });
     }
@@ -178,8 +177,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     @UiThread
-    void authFailed() {
-        urlErrorLabel.setText("error");
+    void authFailed(int msgId) {
+        urlErrorLabel.setText(getString(msgId));
         progressDialog.dismiss();
         if (mode == Mode.SIGN_IN) {
             title.hide();
@@ -229,13 +228,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private void showTitle() {
         title = BlankWall_.build(this);
-        title.setHideActionBar(true);
-        title.show(baseLayout);
-    }
-
-    private void showBlank() {
-        title = BlankWall_.build(this);
-        title.setTitle(R.string.label_button_sign_in, 0);
         title.setHideActionBar(true);
         title.show(baseLayout);
     }

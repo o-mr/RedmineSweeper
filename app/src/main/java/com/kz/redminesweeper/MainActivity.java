@@ -21,8 +21,12 @@ import com.kz.redminesweeper.account.Account;
 import com.kz.redminesweeper.bean.Issues;
 import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
+import com.kz.redminesweeper.bean.Projects;
 import com.kz.redminesweeper.fragment.IssueListFragment;
 import com.kz.redminesweeper.fragment.NavigationFragment;
+import com.kz.redminesweeper.rest.RedmineRestHelper;
+import com.kz.redminesweeper.rest.RedmineRestService;
+import com.kz.redminesweeper.view.AccountListItem;
 import com.kz.redminesweeper.view.NavigationToggle;
 
 import org.androidannotations.annotations.App;
@@ -38,7 +42,7 @@ import java.util.List;
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)
 public class MainActivity extends AppCompatActivity
-        implements NavigationFragment.NavigationCallBacks, IssueListFragment.IssueListCallbacks {
+        implements NavigationFragment.NavigationCallBacks, IssueListFragment.IssueListCallbacks, AccountListItem.AccountListItemListener, ActivityErrorReceiver {
 
     @App
     RmSApplication app;
@@ -55,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     @ViewById
     PagerTabStrip pagerTab;
 
-    private NavigationToggle drawerToggle;
+    private NavigationToggle navigationToggle;
 
     private boolean setupCompleted;
 
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         setUp();
     }
 
-    public void setUp() {
+    private void setUp() {
         if (setupCompleted) return;
         createIssueListPager();
         setupCompleted = true;
@@ -77,8 +81,22 @@ public class MainActivity extends AppCompatActivity
     @Background
     void createIssueListPager() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        List<Project> projects = app.getRedmine().getProjects().getProjects();
-        setUpIssueListPager(projects);
+        app.getRedmine().executeRest(new RedmineRestHelper.RestExecutor<Projects>() {
+            @Override
+            public Projects execute(RedmineRestService redmine) {
+                return redmine.getProjects();
+            }
+
+            @Override
+            public void onSuccessful(Projects result) {
+                setUpIssueListPager(result.getProjects());
+            }
+
+            @Override
+            public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
+
+            }
+        });
     }
 
     @UiThread
@@ -100,11 +118,12 @@ public class MainActivity extends AppCompatActivity
 
     void createNavigation() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        drawerToggle = new NavigationToggle(this, baseLayout);
+        navigationToggle = new NavigationToggle(this, baseLayout);
         baseLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         FragmentManager fManager = getSupportFragmentManager();
         FragmentTransaction fTran = fManager.beginTransaction();
         NavigationFragment navigationFragment = NavigationFragment.newInstance();
+        navigationFragment.setNavigationCallBacks(this);
         fTran.replace(R.id.navigation_frame, navigationFragment);
         fTran.commit();
     }
@@ -121,7 +140,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return navigationToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -134,6 +153,12 @@ public class MainActivity extends AppCompatActivity
     public void onStartAuthentication(Account account) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         startAccountSettings(account, AccountSettingsActivity.Mode.SWITCH);
+    }
+
+    @Override
+    public void onEditAccount(Account account) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        startAccountSettings(account, AccountSettingsActivity.Mode.EDIT);
     }
 
     @Override
@@ -187,4 +212,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onReceivedError(int msgId, Throwable e) {
+
+    }
 }
