@@ -1,5 +1,7 @@
 package com.kz.redminesweeper.rest;
 
+import android.util.Log;
+
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.account.Account;
 
@@ -15,6 +17,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import java.util.ArrayList;
@@ -47,8 +50,11 @@ public class RedmineRestHelper {
         redmine.setRestErrorHandler(new RestErrorHandler() {
             @Override
             public void onRestClientExceptionThrown(NestedRuntimeException e) {
+                Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
                 Throwable ecase = e.getCause();
-                if (e instanceof HttpClientErrorException) {
+                if (ecase instanceof ConnectException) {
+                    executor.onFailed(RestError.NETWORK, R.string.label_msg_error_ntework, e);
+                } else if (e instanceof HttpClientErrorException) {
                     HttpClientErrorException exception = (HttpClientErrorException) e;
                     if (exception.getStatusCode() == HttpStatus.REQUEST_TIMEOUT) {
                         executor.onFailed(RestError.TIMEOUT, R.string.label_msg_error_rest_timeout, e);
@@ -88,6 +94,6 @@ public class RedmineRestHelper {
     }
 
     public enum RestError {
-        TIMEOUT, NOT_FOUND, UNAUTHORIZED, UNKNOWN
+        NETWORK, TIMEOUT, NOT_FOUND, UNAUTHORIZED, UNKNOWN
     }
 }

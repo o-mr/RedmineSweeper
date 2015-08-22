@@ -61,6 +61,7 @@
 
     <string name="dialog_msg_delete_account">Are you sure you want to delete this account?</string>
 
+    <string name="label_msg_error_network">Network is invalid.</string>
 
     <string name="label_msg_error_rest_timeout">接続がタイムアウトしました。</string>
 
