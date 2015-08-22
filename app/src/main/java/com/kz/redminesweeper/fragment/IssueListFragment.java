@@ -77,6 +77,12 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         noTickets = BlankWall_.build(getActivity());
         noTickets.setTitle(R.string.label_no_tickets, 24);
         noTickets.setWallColor(R.color.bg_transparency);
+        noTickets.setBlankWallCallBacks(new BlankWall.BlankWallCallBacks() {
+            @Override
+            public void onClick() {
+                onRefresh();
+            }
+        });
         listView.setOnScrollListener(this);
         issueListAdapter = new IssueListAdapter(getActivity(), R.layout.list_item_issue, R.id.base_layout, new ArrayList<Issue>());
         listView.setAdapter(issueListAdapter);

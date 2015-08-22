@@ -269,6 +269,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         title.setTitle(msgId, 20);
         title.setSubTitle(R.string.label_msg_error_retry);
         title.setHideActionBar(true);
+        title.setWallColor(R.color.bg_error);
         title.setBlankWallCallBacks(new BlankWall.BlankWallCallBacks() {
             @Override
             public void onClick() {

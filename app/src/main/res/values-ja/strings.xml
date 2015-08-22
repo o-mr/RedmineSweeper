@@ -43,7 +43,7 @@
 
     <string name="label_start_redmine_sweeper_sub">Redmine Sweeperは\nシンプルなRedmineクライアントです。\nまずはアカウントを設定してください。</string>
 
-    <string name="label_no_tickets">チケットがありません</string>
+    <string name="label_no_tickets">チケットがありません。</string>
 
     <string name="label_list_add_account">アカウントを追加</string>
 
@@ -53,7 +53,7 @@
 
     <string name="dialog_button_cancel">キャンセル</string>
 
-    <string name="dialog_title_rms_finish">認証が完了していません</string>
+    <string name="dialog_title_rms_finish">認証が完了していません。</string>
 
     <string name="dialog_msg_rms_finish">Redmine Sweeperを終了してもよろしいですか？</string>
 

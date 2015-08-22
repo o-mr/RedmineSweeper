@@ -38,6 +38,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:22.2.1"
     compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.facebook.conceal:conceal:1.0.0@aar'
 }
 
 apt {

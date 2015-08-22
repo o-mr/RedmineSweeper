@@ -63,15 +63,15 @@
 
     <string name="label_msg_error_network">Network is invalid.</string>
 
-    <string name="label_msg_error_rest_timeout">接続がタイムアウトしました。</string>
+    <string name="label_msg_error_rest_timeout">Connection timed out.</string>
 
-    <string name="label_msg_error_page_not_found">ページが見つかりませんでした。</string>
+    <string name="label_msg_error_page_not_found">Page could not be found.</string>
 
-    <string name="label_msg_error_auth_failed">認証に失敗しました。</string>
+    <string name="label_msg_error_auth_failed">It failed authentication.</string>
 
-    <string name="label_msg_error_rest_failed">接続に失敗しました。</string>
+    <string name="label_msg_error_rest_failed">It failed to connect.</string>
 
-    <string name="label_msg_error_retry">再試行する場合はタップしてください。</string>
+    <string name="label_msg_error_retry">Please tap here if you want to retry.</string>
 
 
 </resources>
