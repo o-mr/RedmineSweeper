@@ -35,6 +35,8 @@ public class BlankWall extends LinearLayout {
 
     boolean hideActionBar;
 
+    private BlankWallCallBacks blankWallCallBacks;
+
     public BlankWall(Context context) {
         super(context);
     }
@@ -72,6 +74,7 @@ public class BlankWall extends LinearLayout {
 
     public void show(ViewGroup view) {
         parent = view;
+        parent.removeView(this);
         parent.addView(this, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         ActionBar actionBar = ((AppCompatActivity)getContext()).getSupportActionBar();
         if (hideActionBar && actionBar != null) actionBar.hide();
@@ -88,6 +91,7 @@ public class BlankWall extends LinearLayout {
     @Click({R.id.free_label, R.id.free_sub_label})
     public void clickHide() {
         if(clickHide) hide();
+        if (blankWallCallBacks != null) blankWallCallBacks.onClick();
     }
 
     @UiThread
@@ -112,6 +116,14 @@ public class BlankWall extends LinearLayout {
         } catch (Exception e) {
 
         }
+    }
+
+    public void setBlankWallCallBacks(BlankWallCallBacks blankWallCallBacks) {
+        this.blankWallCallBacks = blankWallCallBacks;
+    }
+
+    public interface BlankWallCallBacks {
+        void onClick();
     }
 
 }

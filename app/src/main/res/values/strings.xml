@@ -70,5 +70,7 @@
 
     <string name="label_msg_error_rest_failed">接続に失敗しました。</string>
 
+    <string name="label_msg_error_retry">再試行する場合はタップしてください。</string>
+
 
 </resources>

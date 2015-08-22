@@ -71,6 +71,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @Extra
     int modeInt;
 
+    @Extra
+    int msgId;
+
     Mode mode;
 
     private ProgressDialog progressDialog;
@@ -92,6 +95,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             case ADD: setupAdd(); break;
             case EDIT: setupEdit(); break;
             case FIRST: setUpFirst(); break;
+            case ERROR: setUpError(); break;
         }
         onChangeInputValue();
     }
@@ -128,6 +132,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private void setUpFirst() {
         showWelcome();
+        signInButton.setVisibility(View.VISIBLE);
+        editButtonGroup.setVisibility(View.GONE);
+    }
+
+    private void setUpError() {
+        showError();
+        account.setUser(null);
         signInButton.setVisibility(View.VISIBLE);
         editButtonGroup.setVisibility(View.GONE);
     }
@@ -180,13 +191,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
     void authFailed(int msgId) {
         urlErrorLabel.setText(getString(msgId));
         progressDialog.dismiss();
-        if (mode == Mode.SIGN_IN) {
+        if (mode == Mode.SIGN_IN || mode == Mode.ERROR) {
             title.hide();
         }
     }
 
     void startMainActivity() {
-        if (mode == Mode.SIGN_IN || mode == Mode.FIRST) {
+        if (mode == Mode.SIGN_IN || mode == Mode.FIRST || mode == Mode.ERROR) {
             Intent intent = new Intent(this, MainActivity_.class);
             startActivity(intent);
         } else {
@@ -232,6 +243,20 @@ public class AccountSettingsActivity extends AppCompatActivity {
         title.show(baseLayout);
     }
 
+    private void showError() {
+        title = BlankWall_.build(this);
+        title.setTitle(msgId, 20);
+        title.setSubTitle(R.string.label_msg_error_retry);
+        title.setHideActionBar(true);
+        title.setBlankWallCallBacks(new BlankWall.BlankWallCallBacks() {
+            @Override
+            public void onClick() {
+                onClickSignIn();
+            }
+        });
+        title.show(baseLayout);
+    }
+
     private void bind(Account account) {
         urlText.setText(account.getRootUrl());
         loginIdText.setText(account.getLoginId());
@@ -243,7 +268,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mode == Mode.SIGN_IN || mode == Mode.FIRST) {
+            if (mode == Mode.SIGN_IN || mode == Mode.FIRST || mode == Mode.ERROR) {
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.dialog_title_rms_finish)
                         .setMessage(R.string.dialog_msg_rms_finish)
@@ -258,7 +283,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     public enum Mode {
-        SIGN_IN, SWITCH, ADD, EDIT, FIRST,
+        SIGN_IN, SWITCH, ADD, EDIT, FIRST, ERROR
     }
 
 }

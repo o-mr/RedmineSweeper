@@ -1,7 +1,5 @@
 package com.kz.redminesweeper.rest;
 
-import android.util.Log;
-
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.account.Account;
 
@@ -32,7 +30,6 @@ public class RedmineRestHelper {
     RedmineAuthInterceptor authInterceptor;
 
     public void setUpRedmineRestService(Account account) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         redmine.setRootUrl(account.getRootUrl());
         authInterceptor.setAccount(account);
         RestTemplate template = redmine.getRestTemplate();
@@ -50,7 +47,6 @@ public class RedmineRestHelper {
         redmine.setRestErrorHandler(new RestErrorHandler() {
             @Override
             public void onRestClientExceptionThrown(NestedRuntimeException e) {
-                Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
                 Throwable ecase = e.getCause();
                 if (e instanceof HttpClientErrorException) {
                     HttpClientErrorException exception = (HttpClientErrorException) e;

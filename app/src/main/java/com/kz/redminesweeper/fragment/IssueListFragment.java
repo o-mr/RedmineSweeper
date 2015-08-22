@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.kz.redminesweeper.ActivityErrorReceiver;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
 import com.kz.redminesweeper.adapter.IssueListAdapter;
@@ -69,6 +70,8 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
 
     private static final int LIMIT = 25;
 
+    private ActivityErrorReceiver errorReceiver;
+
     @AfterViews
     public void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
@@ -115,6 +118,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
 
             @Override
             public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
+                breakDownloadIssues(msgId, e);
             }
 
         });
@@ -140,6 +144,13 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         isLoading = false;
         if (getActivity() == null) return;
         ((IssueListCallbacks) getActivity()).onLoadedIssues(this, issues);
+    }
+
+    @UiThread
+    void breakDownloadIssues(int msgId, Throwable e) {
+        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
+        refresh.setRefreshing(false);
+        if (errorReceiver != null) errorReceiver.onReceivedError(msgId, e);
     }
 
     @Override
@@ -174,6 +185,10 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         Toast.makeText(getActivity(), issueListAdapter.getItem(position).getSubject(), Toast.LENGTH_SHORT).show();
+    }
+
+    public void setErrorReceiver(ActivityErrorReceiver errorReceiver) {
+        this.errorReceiver = errorReceiver;
     }
 
     public int getTotalCount() {

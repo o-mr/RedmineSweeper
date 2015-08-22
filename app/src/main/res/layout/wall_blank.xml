@@ -27,7 +27,6 @@
         android:textSize="16dp"
         android:textColor="@color/text_reversal"
         android:text="@string/app_name"
-        android:background="@color/theme"
         android:layout_weight="1"
         android:visibility="gone"
         />

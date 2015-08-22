@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import com.kz.redminesweeper.ActivityErrorReceiver;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
 import com.kz.redminesweeper.account.Account;
@@ -57,6 +58,8 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
 
     private NavigationCallBacks navigationCallBacks;
 
+    private ActivityErrorReceiver errorReceiver;
+
     @Override
     public void onAttach(Activity activity) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
@@ -104,6 +107,7 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
 
             @Override
             public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
+                if (errorReceiver != null) errorReceiver.onReceivedError(msgId, e);
             }
         });
     }
@@ -185,6 +189,10 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
 
     public void setNavigationCallBacks(NavigationCallBacks navigationCallBacks) {
         this.navigationCallBacks = navigationCallBacks;
+    }
+
+    public void setErrorReceiver(ActivityErrorReceiver errorReceiver) {
+        this.errorReceiver = errorReceiver;
     }
 
 }

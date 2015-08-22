@@ -20,7 +20,7 @@ public class AccountFooter extends LinearLayout {
 
     @Click(R.id.base_layout)
     public void addNewAccount() {
-        ((MainActivity)getContext()).startAccountSettings(new Account(), AccountSettingsActivity.Mode.ADD);
+        ((MainActivity)getContext()).startAccountSettings(new Account(), AccountSettingsActivity.Mode.ADD, 0);
     }
 
 }

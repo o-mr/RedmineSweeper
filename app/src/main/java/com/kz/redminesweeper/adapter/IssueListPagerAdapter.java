@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.util.Log;
 
+import com.kz.redminesweeper.ActivityErrorReceiver;
 import com.kz.redminesweeper.bean.IssuesFilter;
 import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.fragment.IssueListFragment;
@@ -19,17 +20,22 @@ public class IssueListPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<Project> projects;
 
-    public IssueListPagerAdapter(FragmentManager fm, ViewPager pager, List<Project> projects) {
+    private ActivityErrorReceiver errorReceiver;
+
+    public IssueListPagerAdapter(FragmentManager fm, ViewPager pager, List<Project> projects, ActivityErrorReceiver errorReceiver) {
         super(fm);
         this.projects = projects;
         this.pager = pager;
+        this.errorReceiver = errorReceiver;
         pager.setOffscreenPageLimit(4);
     }
 
     @Override
     public Fragment getItem(int position) {
         Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName() + ":" + position);
-        return IssueListFragment.newInstance(projects.get(position));
+        IssueListFragment fragment = IssueListFragment.newInstance(projects.get(position));
+        fragment.setErrorReceiver(errorReceiver);
+        return fragment;
     }
 
     @Override

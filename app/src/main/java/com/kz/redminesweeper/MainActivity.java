@@ -15,6 +15,7 @@ import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
 import com.kz.redminesweeper.account.Account;
@@ -27,6 +28,8 @@ import com.kz.redminesweeper.fragment.NavigationFragment;
 import com.kz.redminesweeper.rest.RedmineRestHelper;
 import com.kz.redminesweeper.rest.RedmineRestService;
 import com.kz.redminesweeper.view.AccountListItem;
+import com.kz.redminesweeper.view.BlankWall;
+import com.kz.redminesweeper.view.BlankWall_;
 import com.kz.redminesweeper.view.NavigationToggle;
 
 import org.androidannotations.annotations.App;
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity
 
     IssueListPagerAdapter issueListPagerAdapter;
 
+    BlankWall errorView;
+
     @Override
     protected void onStart() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setUp() {
         if (setupCompleted) return;
+        errorView = BlankWall_.build(this);
         createIssueListPager();
         setupCompleted = true;
     }
@@ -94,7 +100,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
-
+                onReceivedError(msgId, e);
             }
         });
     }
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity
     @UiThread
     void setUpIssueListPager(List<Project> projects) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        issueListPagerAdapter = new IssueListPagerAdapter(getSupportFragmentManager(), pager, projects);
+        issueListPagerAdapter = new IssueListPagerAdapter(getSupportFragmentManager(), pager, projects, this);
         pager.setAdapter(issueListPagerAdapter);
         createActionBar();
     }
@@ -124,6 +130,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fTran = fManager.beginTransaction();
         NavigationFragment navigationFragment = NavigationFragment.newInstance();
         navigationFragment.setNavigationCallBacks(this);
+        navigationFragment.setErrorReceiver(this);
         fTran.replace(R.id.navigation_frame, navigationFragment);
         fTran.commit();
     }
@@ -152,19 +159,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStartAuthentication(Account account) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        startAccountSettings(account, AccountSettingsActivity.Mode.SWITCH);
+        startAccountSettings(account, AccountSettingsActivity.Mode.SWITCH, 0);
     }
 
     @Override
     public void onEditAccount(Account account) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        startAccountSettings(account, AccountSettingsActivity.Mode.EDIT);
+        startAccountSettings(account, AccountSettingsActivity.Mode.EDIT, 0);
     }
 
     @Override
     public void onLoadedIssues(Fragment fragment, Issues issues) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         // TODO
+    }
+
+    @Override
+    public void onReceivedError(int msgId, Throwable e) {
+        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
+        finish();
+        startAccountSettings(app.getAccountManager().getEnableAccount(), AccountSettingsActivity.Mode.ERROR, msgId);
     }
 
     public void setTheme(IssuesFilter filter) {
@@ -187,9 +201,10 @@ public class MainActivity extends AppCompatActivity
         setUp();
     }
 
-    public void startAccountSettings(Account account, AccountSettingsActivity.Mode mode) {
+    public void startAccountSettings(Account account, AccountSettingsActivity.Mode mode, int msgId) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         Intent intent = new Intent(MainActivity.this, AccountSettingsActivity_.class);
+        intent.putExtra("msgId", msgId);
         intent.putExtra("account", account);
         intent.putExtra("modeInt", mode.ordinal());
         startActivityForResult(intent, AccountSettingsActivity.REQUEST_CODE);
@@ -210,10 +225,5 @@ public class MainActivity extends AppCompatActivity
         } else {
             return getResources().getDrawable(id);
         }
-    }
-
-    @Override
-    public void onReceivedError(int msgId, Throwable e) {
-
     }
 }
