@@ -36,8 +36,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     @App
     RmSApplication app;
 
-    BlankWall title;
-
     @ViewById
     LinearLayout baseLayout;
 
@@ -60,9 +58,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     LinearLayout editButtonGroup;
 
     @ViewById
-    Button updateButton;
-
-    @ViewById
     Button deleteButton;
 
     @Extra
@@ -75,6 +70,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
     int msgId;
 
     Mode mode;
+
+    private BlankWall title;
 
     private ProgressDialog progressDialog;
 
@@ -128,7 +125,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
         account.setUser(null);
         signInButton.setVisibility(View.GONE);
         editButtonGroup.setVisibility(View.VISIBLE);
-        updateButton.setEnabled(false);
         deleteButton.setEnabled(!account.isEnable());
     }
 
@@ -231,7 +227,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     void onChangeInputValue() {
         boolean enabled = isInputCompletion();
         signInButton.setEnabled(enabled);
-        updateButton.setEnabled(enabled);
         clearError();
     }
 

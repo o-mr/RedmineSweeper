@@ -1,5 +1,6 @@
 package com.kz.redminesweeper.fragment;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
@@ -10,7 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.kz.redminesweeper.AccountSettingsActivity;
+import com.kz.redminesweeper.AccountSettingsActivity_;
 import com.kz.redminesweeper.ActivityErrorReceiver;
+import com.kz.redminesweeper.IssueDetailActivity;
+import com.kz.redminesweeper.IssueDetailActivity_;
 import com.kz.redminesweeper.R;
 import com.kz.redminesweeper.RmSApplication;
 import com.kz.redminesweeper.adapter.IssueListAdapter;
@@ -30,13 +35,14 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
 @EFragment(R.layout.fragment_issue_list)
-public class IssueListFragment extends Fragment implements AdapterView.OnItemClickListener, AbsListView.OnScrollListener, SwipeRefreshLayout.OnRefreshListener {
+public class IssueListFragment extends Fragment implements AbsListView.OnScrollListener, SwipeRefreshLayout.OnRefreshListener {
 
     @App
     RmSApplication app;
@@ -51,9 +57,9 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
     LinearLayout baseLayout;
 
     @ViewById
-    ListView listView;
+    ListView issueList;
 
-    BlankWall noTickets;
+    private BlankWall noTickets;
 
     private IssueListAdapter issueListAdapter;
 
@@ -83,10 +89,9 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
                 onRefresh();
             }
         });
-        listView.setOnScrollListener(this);
+        issueList.setOnScrollListener(this);
         issueListAdapter = new IssueListAdapter(getActivity(), R.layout.list_item_issue, R.id.base_layout, new ArrayList<Issue>());
-        listView.setAdapter(issueListAdapter);
-        listView.setOnItemClickListener(this);
+        issueList.setAdapter(issueListAdapter);
         refresh.setOnRefreshListener(this);
     }
 
@@ -163,7 +168,7 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (issueListAdapter == null) return;
         noTickets.hide();
-        listView.clearChoices();
+        issueList.clearChoices();
         isLoaded = false;
         issueListAdapter.clear();
         offset = 0;
@@ -186,10 +191,13 @@ public class IssueListFragment extends Fragment implements AdapterView.OnItemCli
         startDownloadIssues();
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    @ItemClick(R.id.issue_list)
+    void selectIssue(int position) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        Toast.makeText(getActivity(), issueListAdapter.getItem(position).getSubject(), Toast.LENGTH_SHORT).show();
+        Issue issue = issueListAdapter.getItem(position);
+        Intent intent = new Intent(getActivity(), IssueDetailActivity_.class);
+        intent.putExtra("issue", issue);
+        startActivityForResult(intent, IssueDetailActivity.REQUEST_CODE);
     }
 
     public void setErrorReceiver(ActivityErrorReceiver errorReceiver) {

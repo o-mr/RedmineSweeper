@@ -50,7 +50,7 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
     @ViewById
     ListView accountList;
 
-    AccountFooter accountFooter;
+    private AccountFooter accountFooter;
 
     private FilterListAdapter filterListAdapter;
 

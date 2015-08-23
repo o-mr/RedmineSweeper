@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity
 
     private boolean setupCompleted;
 
-    IssueListPagerAdapter issueListPagerAdapter;
-
-    BlankWall errorView;
+    private IssueListPagerAdapter issueListPagerAdapter;
 
     @Override
     protected void onStart() {
@@ -78,9 +76,14 @@ public class MainActivity extends AppCompatActivity
 
     private void setUp() {
         if (setupCompleted) return;
-        errorView = BlankWall_.build(this);
+        downloadMasterData();
         createIssueListPager();
         setupCompleted = true;
+    }
+
+    private void downloadMasterData() {
+        app.setErrorReceiver(this);
+        app.downloadStatuses();
     }
 
     @Background
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
+        actionBar.setElevation(0f);
         actionBar.show();
         createNavigation();
     }

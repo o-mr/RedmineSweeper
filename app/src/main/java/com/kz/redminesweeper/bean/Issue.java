@@ -29,6 +29,8 @@ public class Issue implements Serializable {
 
     private int done_ratio;
 
+    private Date start_date;
+
     private Date created_on;
 
     private Date updated_on;
@@ -119,6 +121,14 @@ public class Issue implements Serializable {
 
     public void setDone_ratio(int done_ratio) {
         this.done_ratio = done_ratio;
+    }
+
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
     }
 
     public Date getCreated_on() {

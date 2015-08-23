@@ -1,9 +1,10 @@
 package com.kz.redminesweeper.bean;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 
-public class Statuses implements Serializable {
+public class Statuses implements Serializable, Iterable<Status> {
 
     List<Status> issue_statuses;
 
@@ -15,4 +16,20 @@ public class Statuses implements Serializable {
         this.issue_statuses = issue_statuses;
     }
 
+    public Status getStatus(String id) {
+        for (Status status : issue_statuses) {
+            if (status.getId().equals(id)) return status;
+        }
+        return null;
+    }
+
+    public boolean isCloseIssue(Issue issue) {
+        Status status = getStatus(issue.getStatus().getId());
+        return status != null && status.is_closed();
+    }
+
+    @Override
+    public Iterator<Status> iterator() {
+        return issue_statuses.iterator();
+    }
 }

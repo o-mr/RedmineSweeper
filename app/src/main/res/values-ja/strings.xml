@@ -35,9 +35,9 @@
 
     <string name="label_button_sign_in">サインイン</string>
 
-    <string name="label_button_update">アカウントを更新</string>
+    <string name="label_button_update">更新</string>
 
-    <string name="label_button_delete">アカウントを削除</string>
+    <string name="label_button_delete">削除</string>
 
     <string name="label_start_redmine_sweeper">Redmine Sweeperを\n始めましょう！</string>
 
@@ -73,4 +73,13 @@
 
     <string name="label_msg_error_retry">再試行する場合はタップしてください。</string>
 
+    <string name="label_assigned_to">担当者</string>
+
+    <string name="label_start_date">開始日</string>
+
+    <string name="label_priority">優先度</string>
+
+    <string name="label_status">ステータス</string>
+
+    <string name="label_done_ratio">進捗率</string>
 </resources>

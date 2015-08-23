@@ -6,6 +6,7 @@
 
     <color name="bg_standard">#ffffff</color>
     <color name="bg_reversal">#616161</color>
+    <color name="bg_title">#E1F5FE</color>
     <color name="bg_transparency">#0000</color>
     <color name="bg_error">#263238</color>
 
@@ -13,9 +14,13 @@
 
     <color name="text_standard">#616161</color>
     <color name="text_reversal">#ffffff</color>
+    <color name="text_disabled">#263238</color>
     <color name="text_error">#b71c1c</color>
     <color name="text_hint">#cccccc</color>
     <color name="text_tab">#ffffff</color>
+    <color name="text_title">#546E7A</color>
+
+    <color name="label_button">#009688</color>
 
     <color name="settings_title">#d32f2f</color>
 
@@ -36,5 +41,9 @@
     <color name="status_all">#03A9F4</color>
 
     <color name="item_strong">#ECEFF1</color>
+    <color name="item_disabled">#90A4AE</color>
+
+    <color name="bg_progress_bar">#607D8B</color>
+    <color name="fg_progress_bar">#CDDC39</color>
 
 </resources>

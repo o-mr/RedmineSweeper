@@ -10,6 +10,8 @@ public class Status implements IssuesFilter, Serializable {
 
     private String name;
 
+    private boolean is_closed;
+
     public Status() {}
 
     public Status(String id, String name) {
@@ -33,6 +35,14 @@ public class Status implements IssuesFilter, Serializable {
         this.name = name;
     }
 
+    public boolean is_closed() {
+        return is_closed;
+    }
+
+    public void setIs_closed(boolean is_closed) {
+        this.is_closed = is_closed;
+    }
+
     public String getLabel() {
         if ("*".equals(id)) {
             return "A";
@@ -50,5 +60,4 @@ public class Status implements IssuesFilter, Serializable {
             default  : return R.color.theme;
         }
     }
-
 }

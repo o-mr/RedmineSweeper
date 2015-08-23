@@ -35,7 +35,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginRight="16dp"
                     android:src="@drawable/ic_web_grey600_24dp"
                     />
 
@@ -43,7 +43,6 @@
                     android:id="@+id/url_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:hint="@string/hint_url_text"
                     android:inputType="textUri"
                     android:textColor="@color/text_standard"
@@ -64,7 +63,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_gravity="bottom"
                     android:src="@drawable/ic_account_circle_grey600_24dp"
                     />
 
@@ -72,7 +72,6 @@
                     android:id="@+id/login_id_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:hint="@string/hint_login_id_text"
                     android:inputType="textEmailAddress"
                     android:textColor="@color/text_standard"
@@ -92,7 +91,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginRight="16dp"
                     android:src="@drawable/ic_key_grey600_24dp"
                     />
 
@@ -111,8 +110,7 @@
                 android:id="@+id/save_password_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="45dp"
-                android:layout_marginBottom="16dp"
+                android:layout_margin="16dp"
                 android:text="@string/hint_password_save_check"
                 android:checked="true"
                 android:textColor="@color/text_standard"
@@ -120,14 +118,13 @@
 
             <Button
                 android:id="@+id/sign_in_button"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="16dp"
-                android:background="@color/settings_title"
-                android:textSize="16dp"
-                android:textColor="@color/text_reversal"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginRight="16dp"
+                android:layout_gravity="right"
+                android:textSize="12dp"
+                android:textColor="@color/label_button"
                 android:text="@string/label_button_sign_in"
-                android:visibility="gone"
                 />
 
             <LinearLayout
@@ -135,30 +132,26 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="right"
                 >
 
                 <Button
                     android:id="@+id/delete_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_margin="16dp"
-                    android:background="@color/settings_title"
+                    android:layout_width="100dp"
+                    android:layout_height="48dp"
                     android:textSize="12dp"
-                    android:textColor="@color/text_reversal"
+                    android:textColor="@color/label_button"
                     android:text="@string/label_button_delete"
-                    android:layout_weight="1"
                     />
 
                 <Button
                     android:id="@+id/update_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_margin="16dp"
-                    android:background="@color/settings_title"
+                    android:layout_width="100dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="16dp"
                     android:textSize="12dp"
-                    android:textColor="@color/text_reversal"
+                    android:textColor="@color/label_button"
                     android:text="@string/label_button_update"
-                    android:layout_weight="1"
                     />
 
             </LinearLayout>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/base_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_standard"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <LinearLayout
+                android:id="@+id/title_label"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tracker_0"
+                >
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/id_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="8dp"
+                        android:textSize="16dp"
+                        android:textColor="@color/text_reversal"
+                        android:text="99"
+                        android:focusableInTouchMode="false"
+                        android:focusable="false"
+                        />
+
+                    <TextView
+                        android:id="@+id/subject_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textColor="@color/text_reversal"
+                        android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                        android:ellipsize="end"
+                        android:focusableInTouchMode="false"
+                        android:focusable="false"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/project_name_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_reversal"
+                    android:text="XXXXXXXXXXXXXXXXXXXXXXX"
+                    android:textAlignment="center"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+                <TextView
+                    android:id="@+id/created_info_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:textSize="10dp"
+                    android:textColor="@color/text_reversal"
+                    android:text="@string/created_info_label"
+                    android:textAlignment="center"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                >
+
+                <TextView
+                    android:layout_width="72dp"
+                    android:layout_height="match_parent"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:text="@string/label_assigned_to"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+                <TextView
+                    android:id="@+id/assigned_to_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                >
+
+                <TextView
+                    android:layout_width="72dp"
+                    android:layout_height="match_parent"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:text="@string/label_start_date"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+                <TextView
+                    android:id="@+id/start_date_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                >
+
+                <TextView
+                    android:layout_width="72dp"
+                    android:layout_height="match_parent"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:text="@string/label_priority"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+                <TextView
+                    android:id="@+id/priority_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                >
+
+                <TextView
+                    android:layout_width="72dp"
+                    android:layout_height="match_parent"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:text="@string/label_status"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+                <TextView
+                    android:id="@+id/status_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                >
+
+                <TextView
+                    android:layout_width="72dp"
+                    android:layout_height="match_parent"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:text="@string/label_done_ratio"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/done_ratio_bar"
+                    android:layout_width="150dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="center"
+                    android:max="100"
+                    android:progressDrawable="@drawable/pg_done_ratio"
+                    style="?android:progressBarStyleHorizontal"
+                    />
+
+                <TextView
+                    android:id="@+id/done_ratio_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:textSize="12dp"
+                    android:textColor="@color/text_standard"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/text_title"
+                android:layout_margin="8dp"
+                />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                >
+
+                <TextView
+                    android:id="@+id/description_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:textColor="@color/text_standard"
+                    android:text="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

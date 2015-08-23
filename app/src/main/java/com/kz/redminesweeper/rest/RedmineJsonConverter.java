@@ -22,9 +22,14 @@ class RedmineJsonConverter extends GsonHttpMessageConverter {
         gb.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
             @Override
             public Date deserialize(JsonElement dateElement, Type arg1, JsonDeserializationContext arg2) throws JsonParseException {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
                 String date = dateElement.getAsString();
+                SimpleDateFormat sdf = null;
+                if (date.matches("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z")) {
+                    sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                    sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                } else {
+                    sdf = new SimpleDateFormat("yyyy-MM-dd");
+                }
                 try {
                     return sdf.parse(date);
                 } catch (ParseException e) {

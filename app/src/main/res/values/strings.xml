@@ -35,9 +35,9 @@
 
     <string name="label_button_sign_in">sign in</string>
 
-    <string name="label_button_update">update account</string>
+    <string name="label_button_update">update</string>
 
-    <string name="label_button_delete">delete account</string>
+    <string name="label_button_delete">delete</string>
 
     <string name="label_start_redmine_sweeper">Let\'s start Redmine Sweeper</string>
 
@@ -73,5 +73,14 @@
 
     <string name="label_msg_error_retry">Please tap here if you want to retry.</string>
 
+    <string name="label_assigned_to">assigned to</string>
+
+    <string name="label_start_date">start date</string>
+
+    <string name="label_priority">priority</string>
+
+    <string name="label_status">status</string>
+
+    <string name="label_done_ratio">done ratio</string>
 
 </resources>

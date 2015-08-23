@@ -15,7 +15,7 @@
         >
 
         <ListView
-            android:id="@+id/list_view"
+            android:id="@+id/issue_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@color/line"
