@@ -5,6 +5,7 @@ import com.kz.redminesweeper.bean.Issue;
 import com.kz.redminesweeper.bean.Issues;
 import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.bean.Projects;
+import com.kz.redminesweeper.bean.Queries;
 import com.kz.redminesweeper.bean.Statuses;
 import com.kz.redminesweeper.bean.Trackers;
 import com.kz.redminesweeper.bean.User;
@@ -25,10 +26,13 @@ public interface RedmineRestService extends RestClientErrorHandling {
     String getRootUrl();
 
     @Get("/users/current.json")
-    CurrentUser getMyUserInfo();
+    CurrentUser getCurrentUser();
 
     @Get("/issue_statuses.json")
     Statuses getStatuses();
+
+    @Get("/queries.json")
+    Queries getQueries();
 
     @Get("/trackers.json")
     Trackers getTrackers();
@@ -59,6 +63,9 @@ public interface RedmineRestService extends RestClientErrorHandling {
 
     @Get("/projects/{projectId}/issues.json?watcher_id={watcher_id}&offset={offset}&limit={limit}")
     Issues getIssuesByProjectIdAndWatcherId(int projectId, String watcher_id, int offset, int limit);
+
+    @Get("/projects/{projectId}/issues.json?query_id={query_id}&offset={offset}&limit={limit}")
+    Issues getIssuesByProjectIdAndQueryId(int projectId, String query_id, int offset, int limit);
 
     @Get("/issues/{issueId}.json")
     Issue getIssueById(int issueId);

@@ -15,6 +15,10 @@
 
     <string name="date_format">yyyy/MM/dd</string>
 
+    <string name="label_filter_queries">Custom queries</string>
+
+    <string name="label_filter_trackers">Trackers</string>
+
     <string name="filter_open">Open</string>
 
     <string name="filter_close">Close</string>
@@ -44,6 +48,8 @@
     <string name="label_start_redmine_sweeper_sub">Redmine Sweeper is a simple Redmine client.\nPlease set the account First.</string>
 
     <string name="label_no_tickets">No tickets</string>
+
+    <string name="label_invalid_query">Invalid custom query</string>
 
     <string name="label_list_add_account">Add account</string>
 

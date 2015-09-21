@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity_"
     android:id="@+id/base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/theme"
-    >
+    tools:context=".MainActivity_">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        >
+        android:layout_height="0dp">
 
         <android.support.v4.view.PagerTabStrip
             android:id="@+id/pagerTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:textSize="12dp"
-            android:textColor="@color/text_tab"
             android:elevation="4dp"
-            />
+            android:textColor="@color/text_tab"
+            android:textSize="12dp" />
 
     </android.support.v4.view.ViewPager>
 
@@ -32,7 +28,6 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/bg_standard"
-        />
+        android:background="@color/bg_standard" />
 
 </android.support.v4.widget.DrawerLayout>

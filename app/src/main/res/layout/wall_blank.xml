@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/base_layout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/theme"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/free_label"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="32dp"
-        android:textColor="@color/text_reversal"
-        android:text="@string/app_name"
         android:layout_weight="1"
-        />
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/text_reversal"
+        android:textSize="32dp" />
 
     <TextView
         android:id="@+id/free_sub_label"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top|center_horizontal"
-        android:textSize="16dp"
-        android:textColor="@color/text_reversal"
-        android:text="@string/app_name"
         android:layout_weight="1"
-        android:visibility="gone"
-        />
+        android:gravity="top|center_horizontal"
+        android:text="@string/app_name"
+        android:textColor="@color/text_reversal"
+        android:textSize="16dp"
+        android:visibility="gone" />
 
 </LinearLayout>

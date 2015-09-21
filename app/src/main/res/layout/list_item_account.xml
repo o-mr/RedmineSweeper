@@ -1,58 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/base_layout"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/activatedBackgroundIndicator"
     android:descendantFocusability="blocksDescendants"
-    >
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/id_label"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_margin="16dp"
-        android:gravity="center"
         android:background="@drawable/lb_list_item_account"
-        android:textSize="8dp"
-        android:textColor="@color/text_reversal"
+        android:gravity="center"
         android:text="XX"
-        />
+        android:textColor="@color/text_reversal"
+        android:textSize="8dp" />
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/login_id_label"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="16dp"
-            android:textSize="16dp"
-            android:textColor="@color/text_standard"
-            android:text="XXXXX"
-            android:focusableInTouchMode="false"
+            android:layout_marginTop="8dp"
             android:focusable="false"
-            />
+            android:focusableInTouchMode="false"
+            android:text="XXXXX"
+            android:textColor="@color/text_standard"
+            android:textSize="12dp" />
 
         <TextView
             android:id="@+id/url_label"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
             android:layout_marginLeft="16dp"
-            android:textSize="10dp"
-            android:textColor="@color/text_standard"
-            android:text="http://example.com/redmine"
-            android:focusableInTouchMode="false"
+            android:layout_marginTop="4dp"
             android:focusable="false"
-            />
+            android:focusableInTouchMode="false"
+            android:text="http://example.com/redmine"
+            android:textColor="@color/text_standard"
+            android:textSize="10dp" />
 
     </LinearLayout>
 
@@ -60,10 +54,9 @@
         android:id="@+id/edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:background="@color/bg_transparency"
         android:layout_gravity="right"
-        android:src="@drawable/ic_tooltip_edit_grey600_24dp"
-        />
+        android:background="@color/bg_transparency"
+        android:padding="16dp"
+        android:src="@drawable/ic_tooltip_edit_grey600_24dp" />
 
 </LinearLayout>

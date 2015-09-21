@@ -31,9 +31,13 @@ public class Issue implements Serializable {
 
     private Date start_date;
 
+    private Date due_date;
+
     private Date created_on;
 
     private Date updated_on;
+
+    private boolean is_private;
 
     public int getId() {
         return id;
@@ -55,16 +59,16 @@ public class Issue implements Serializable {
         return tracker;
     }
 
+    public void setTracker(Tracker tracker) {
+        this.tracker = tracker;
+    }
+
     public Status getStatus() {
         return status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public void setTracker(Tracker tracker) {
-        this.tracker = tracker;
     }
 
     public Priority getPriority() {
@@ -131,6 +135,14 @@ public class Issue implements Serializable {
         this.start_date = start_date;
     }
 
+    public Date getDue_date() {
+        return due_date;
+    }
+
+    public void setDue_date(Date due_date) {
+        this.due_date = due_date;
+    }
+
     public Date getCreated_on() {
         return created_on;
     }
@@ -147,8 +159,12 @@ public class Issue implements Serializable {
         this.updated_on = updated_on;
     }
 
-    public static String convertDateToString(Date date) {
-        return DateFormat.format("yyyy-MM-dd kk:mm:ss", date).toString();
+    public boolean is_private() {
+        return is_private;
+    }
+
+    public void setIs_private(boolean is_private) {
+        this.is_private = is_private;
     }
 
     @Override

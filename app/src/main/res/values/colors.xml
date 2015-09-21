@@ -12,6 +12,7 @@
 
     <color name="line">#EEEEEE</color>
 
+    <color name="text_strong">#212121</color>
     <color name="text_standard">#616161</color>
     <color name="text_reversal">#ffffff</color>
     <color name="text_disabled">#263238</color>
@@ -23,6 +24,17 @@
     <color name="label_button">#009688</color>
 
     <color name="settings_title">#d32f2f</color>
+
+    <color name="query_0">#b71c1c</color>
+    <color name="query_1">#3F51B5</color>
+    <color name="query_2">#8BC34A</color>
+    <color name="query_3">#9C27B0</color>
+    <color name="query_4">#FFA000</color>
+    <color name="query_5">#03A9F4</color>
+    <color name="query_6">#795548</color>
+    <color name="query_7">#009688</color>
+    <color name="query_8">#FF5722</color>
+    <color name="query_9">#607D8B</color>
 
     <color name="tracker_0">#b71c1c</color>
     <color name="tracker_1">#3F51B5</color>
@@ -41,7 +53,7 @@
     <color name="status_all">#03A9F4</color>
 
     <color name="item_strong">#ECEFF1</color>
-    <color name="item_disabled">#90A4AE</color>
+    <color name="item_disabled">#BDBDBD</color>
 
     <color name="bg_progress_bar">#607D8B</color>
     <color name="fg_progress_bar">#CDDC39</color>

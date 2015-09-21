@@ -14,10 +14,15 @@ import com.kz.redminesweeper.account.AccountManager;
 import com.kz.redminesweeper.adapter.AccountListAdapter;
 import com.kz.redminesweeper.adapter.FilterListAdapter;
 import com.kz.redminesweeper.bean.IssuesFilter;
+import com.kz.redminesweeper.bean.ListItem;
+import com.kz.redminesweeper.bean.Projects;
+import com.kz.redminesweeper.bean.Queries;
+import com.kz.redminesweeper.bean.Query;
 import com.kz.redminesweeper.bean.Status;
+import com.kz.redminesweeper.bean.Tracker;
 import com.kz.redminesweeper.bean.Trackers;
 import com.kz.redminesweeper.bean.Watcher;
-import com.kz.redminesweeper.rest.RedmineRestHelper;
+import com.kz.redminesweeper.rest.RedmineAccess;
 import com.kz.redminesweeper.rest.RedmineRestService;
 import com.kz.redminesweeper.view.AccountFooter;
 import com.kz.redminesweeper.view.AccountFooter_;
@@ -36,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EFragment(R.layout.fragment_navigation)
-public class NavigationFragment extends Fragment implements AccountManager.AccountAuthenticator {
+public class NavigationFragment extends Fragment {
 
     @App
     RmSApplication app;
@@ -60,76 +65,83 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
 
     private ActivityErrorReceiver errorReceiver;
 
-    @Override
-    public void onAttach(Activity activity) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        super.onAttach(activity);
-    }
+    private List<ListItem> defaultFilters;
+
+    private List<Query> queryFilters;
+
+    private List<Tracker> trackerFilters;
 
     @AfterViews
     void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        accountHeader.bind(app.getAccountManager().getEnableAccount());
         createFilterList();
         createAccountList();
     }
 
-    @Override
-    public void onStart() {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        super.onStart();
-        accountHeader.bind(app.getAccountManager().getEnableAccount());
-    }
-
     void createFilterList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        List<IssuesFilter> filters = new ArrayList<>();
-        filters.add(new Status("o", getString(R.string.filter_open)));
-        filters.add(new Status("c", getString(R.string.filter_close)));
-        filters.add(new Watcher("me", getString(R.string.filter_watch)));
-        filters.add(new Status("*", getString(R.string.filter_all)));
-        downloadFilter(filters);
+        defaultFilters = new ArrayList<>();
+        defaultFilters.add(new Status("o", getString(R.string.filter_open)));
+        defaultFilters.add(new Status("c", getString(R.string.filter_close)));
+        defaultFilters.add(new Watcher("me", getString(R.string.filter_watch)));
+        defaultFilters.add(new Status("*", getString(R.string.filter_all)));
+        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.list_item_filter, R.id.base_layout, defaultFilters);
+        filterList.setAdapter(filterListAdapter);
+        updateQueries();
+        updateTrackers();
     }
 
-    @Background
-    void downloadFilter(final List<IssuesFilter> filters) {
+    void updateQueries() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        app.getRedmine().executeRest(new RedmineRestHelper.RestExecutor<Trackers>() {
+        app.getRedmine().downloadQueries(new RedmineAccess.RestResultListener<Queries>() {
             @Override
-            public Trackers execute(RedmineRestService redmine) {
-                return redmine.getTrackers();
+            public void onSuccessful(Queries result) {
+                queryFilters = result.getQueries();
+                updateFilterList();
             }
 
+            @Override
+            public void onFailed(int msgId, Throwable e) {
+                breakDownload(msgId, e);
+            }
+        });
+    }
+
+    void updateTrackers() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        app.getRedmine().downloadTrackers(new RedmineAccess.RestResultListener<Trackers>() {
             @Override
             public void onSuccessful(Trackers result) {
-                filters.addAll(result.getTrackers());
-                updateFilterList(filters);
+                trackerFilters = result.getTrackers();
+                updateFilterList();
             }
 
             @Override
-            public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
-                if (errorReceiver != null) errorReceiver.onReceivedError(msgId, e);
+            public void onFailed(int msgId, Throwable e) {
+                breakDownload(msgId, e);
             }
         });
     }
 
     @UiThread
-    void updateFilterList(List<IssuesFilter> filters) {
+    void updateFilterList() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        filterListAdapter = new FilterListAdapter(getActivity(), R.layout.list_item_filter, R.id.base_layout, filters);
-        filterList.setAdapter(filterListAdapter);
+        if (queryFilters == null || trackerFilters == null) return;
+        filterListAdapter.addPartition(getString(R.string.label_filter_queries));
+        filterListAdapter.addAll(queryFilters);
+        filterListAdapter.addPartition(getString(R.string.label_filter_trackers));
+        filterListAdapter.addAll(trackerFilters);
         filterListAdapter.notifyDataSetChanged();
-        setHasOptionsMenu(true);
+        queryFilters = null;
+        trackerFilters = null;
         selectFilter(0);
     }
 
-    @ItemClick(R.id.filter_list)
-    void selectFilter(int position) {
-        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        filterList.setItemChecked(position, true);
-        filterList.setSelection(position);
-        IssuesFilter filter = filterListAdapter.getItem(position);
-        if (navigationCallBacks == null) return;
-        navigationCallBacks .onChangeFilter(filter);
+    @UiThread
+    void breakDownload(int msgId, Throwable e) {
+        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
+        if (errorReceiver != null) errorReceiver.onReceivedError(msgId, e);
     }
 
     void createAccountList() {
@@ -142,24 +154,44 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
         selectAccount(app.getAccountManager().indexOfEnableAccount());
     }
 
+    @ItemClick(R.id.filter_list)
+    void selectFilter(int position) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        filterList.setItemChecked(position, true);
+        filterList.setSelection(position);
+        IssuesFilter filter = (IssuesFilter)filterListAdapter.getItem(position);
+        if (navigationCallBacks == null) return;
+        navigationCallBacks .onChangeFilter(filter);
+    }
+
     @ItemClick(R.id.account_list)
     void selectAccount(int position) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         accountList.setItemChecked(position, true);
         accountList.setSelection(position);
-        Account account = accountListAdapter.getItem(position);
+        final Account account = accountListAdapter.getItem(position);
         if (account.equals(app.getAccountManager().getEnableAccount())) return;
-        app.getAccountManager().authenticate(account, this);
+        app.getAccountManager().authenticate(account, new RedmineAccess.RestResultListener<Account>() {
+            @Override
+            public void onSuccessful(Account result) {
+                switchAccount(result);
+            }
+
+            @Override
+            public void onFailed(int msgId, Throwable e) {
+                startAuthentication(account);
+            }
+        });
     }
 
-    @Override @UiThread
-    public void onAuthSuccessful(Account account) {
+    @UiThread
+    void switchAccount(Account account) {
         if (navigationCallBacks == null) return;
         navigationCallBacks.onSwitchAccount(account);
     }
 
-    @Override @UiThread
-    public void onAuthFailed(Account account, int errorNo, int msId, Throwable e) {
+    @UiThread
+    void startAuthentication(Account account) {
         if (navigationCallBacks == null) return;
         navigationCallBacks.onStartAuthentication(account);
     }
@@ -177,6 +209,14 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
         accountHeader.changeNavigationMode();
     }
 
+    public void setNavigationCallBacks(NavigationCallBacks navigationCallBacks) {
+        this.navigationCallBacks = navigationCallBacks;
+    }
+
+    public void setErrorReceiver(ActivityErrorReceiver errorReceiver) {
+        this.errorReceiver = errorReceiver;
+    }
+
     public static NavigationFragment newInstance() {
         return NavigationFragment_.builder().build();
     }
@@ -185,14 +225,6 @@ public class NavigationFragment extends Fragment implements AccountManager.Accou
         void onChangeFilter(IssuesFilter filter);
         void onSwitchAccount(Account account);
         void onStartAuthentication(Account account);
-    }
-
-    public void setNavigationCallBacks(NavigationCallBacks navigationCallBacks) {
-        this.navigationCallBacks = navigationCallBacks;
-    }
-
-    public void setErrorReceiver(ActivityErrorReceiver errorReceiver) {
-        this.errorReceiver = errorReceiver;
     }
 
 }

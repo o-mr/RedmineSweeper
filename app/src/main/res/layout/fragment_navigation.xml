@@ -1,37 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
+    android:orientation="vertical">
 
     <com.kz.redminesweeper.view.AccountHeader_
         android:id="@+id/account_header"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:orientation="vertical" />
 
-    <ListView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/filter_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/line"
-        android:dividerHeight="0dp"
         android:choiceMode="singleChoice"
-        />
+        android:divider="@color/line"
+        android:dividerHeight="0dp" />
 
-    <ListView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/account_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
         android:divider="@color/line"
         android:dividerHeight="0dp"
-        android:choiceMode="singleChoice"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </LinearLayout>

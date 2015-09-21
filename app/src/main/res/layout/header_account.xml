@@ -1,53 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/base_layout"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
     android:background="@color/theme"
-    >
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/user_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="16dp"
-        android:src="@drawable/ic_account_circle_white_48dp"
-        />
+        android:src="@drawable/ic_account_circle_white_48dp" />
 
     <TextView
         android:id="@+id/user_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
-        android:textSize="12dp"
-        android:textColor="@color/text_reversal"
         android:text="XXXX XXXX"
-        />
+        android:textColor="@color/text_reversal"
+        android:textSize="12dp" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/root_url_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
-            android:textColor="@color/text_reversal"
-            android:text="@string/hint_url_text"
             android:layout_weight="1"
-            />
+            android:text="@string/hint_url_text"
+            android:textColor="@color/text_reversal"
+            android:textSize="10dp" />
 
         <ImageView
             android:id="@+id/mode_change_button"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:background="@drawable/bt_change_navigation_mode"
-            />
+            android:background="@drawable/bt_change_navigation_mode" />
 
     </LinearLayout>
 

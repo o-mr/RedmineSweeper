@@ -15,6 +15,10 @@
 
     <string name="date_format">yyyy/MM/dd</string>
 
+    <string name="label_filter_queries">カスタムクエリ</string>
+
+    <string name="label_filter_trackers">トラッカー</string>
+
     <string name="filter_open">未完了のチケット</string>
 
     <string name="filter_close">完了したチケット</string>
@@ -44,6 +48,8 @@
     <string name="label_start_redmine_sweeper_sub">Redmine Sweeperは\nシンプルなRedmineクライアントです。\nまずはアカウントを設定してください。</string>
 
     <string name="label_no_tickets">チケットがありません。</string>
+
+    <string name="label_invalid_query">無効なカスタムクエリです。</string>
 
     <string name="label_list_add_account">アカウントを追加</string>
 

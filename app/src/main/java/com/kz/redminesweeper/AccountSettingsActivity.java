@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kz.redminesweeper.account.Account;
-import com.kz.redminesweeper.account.AccountManager;
+import com.kz.redminesweeper.rest.RedmineAccess;
 import com.kz.redminesweeper.view.BlankWall;
 import com.kz.redminesweeper.view.BlankWall_;
 
@@ -151,17 +151,43 @@ public class AccountSettingsActivity extends AppCompatActivity {
         account.setPassword(passwordText.getText().toString());
         account.setSavePassword(savePasswordCheck.isChecked());
 
-        app.getAccountManager().authenticate(account, new AccountManager.AccountAuthenticator() {
+        app.getAccountManager().authenticate(account, new RedmineAccess.RestResultListener<Account>() {
             @Override
-            public void onAuthSuccessful(Account account) {
+            public void onSuccessful(Account result) {
                 authSuccessful();
             }
 
             @Override
-            public void onAuthFailed(Account account, int errorNo, int msgId, Throwable e) {
+            public void onFailed(int msgId, Throwable e) {
                 authFailed(msgId);
             }
         });
+    }
+
+    @UiThread
+    void authSuccessful() {
+        progressDialog.dismiss();
+        startMainActivity();
+    }
+
+    @UiThread
+    void authFailed(int msgId) {
+        String msg = getString(msgId);
+        if (msgId == R.string.label_msg_error_network ||
+                msgId == R.string.label_msg_error_rest_timeout ||
+                msgId == R.string.label_msg_error_page_not_found ||
+                msgId == R.string.label_msg_error_rest_failed) {
+            urlText.setError(msg);
+            urlText.requestFocus();
+        } else if (msgId == R.string.label_msg_error_auth_failed) {
+            loginIdText.setError(msg);
+            passwordText.setError(msg);
+            loginIdText.requestFocus();
+        }
+        progressDialog.dismiss();
+        if (mode == Mode.SIGN_IN || mode == Mode.ERROR) {
+            title.hide();
+        }
     }
 
     @Click({R.id.delete_button})
@@ -178,32 +204,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
             })
             .setNegativeButton(R.string.dialog_button_cancel, null)
             .create().show();
-    }
-
-    @UiThread
-    void authSuccessful() {
-        progressDialog.dismiss();
-        startMainActivity();
-    }
-
-    @UiThread
-    void authFailed(int msgId) {
-        String msg = getString(msgId);
-        if (msgId == R.string.label_msg_error_network ||
-            msgId == R.string.label_msg_error_rest_timeout ||
-            msgId == R.string.label_msg_error_page_not_found ||
-            msgId == R.string.label_msg_error_rest_failed) {
-            urlText.setError(msg);
-            urlText.requestFocus();
-        } else if (msgId == R.string.label_msg_error_auth_failed) {
-            loginIdText.setError(msg);
-            passwordText.setError(msg);
-            loginIdText.requestFocus();
-        }
-        progressDialog.dismiss();
-        if (mode == Mode.SIGN_IN || mode == Mode.ERROR) {
-            title.hide();
-        }
     }
 
     private void clearError() {

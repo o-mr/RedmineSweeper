@@ -16,8 +16,11 @@ public class IssueListAdapter extends ArrayAdapter<Issue> {
 
     LayoutInflater layoutInflater;
 
+    private List<Issue> list;
+
     public IssueListAdapter(Context context, int layoutId, int viewId, List<Issue> list)  {
         super(context, layoutId, viewId, list);
+        this.list = list;
         layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -29,4 +32,9 @@ public class IssueListAdapter extends ArrayAdapter<Issue> {
         ((IssueListItem)convertView).bind(getItem(position));
         return convertView;
     }
+
+    public List<Issue> getList() {
+        return list;
+    }
+
 }

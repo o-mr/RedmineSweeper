@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.kz.redminesweeper.ActivityErrorReceiver;
 import com.kz.redminesweeper.bean.IssuesFilter;
@@ -22,6 +24,8 @@ public class IssueListPagerAdapter extends FragmentStatePagerAdapter {
 
     private ActivityErrorReceiver errorReceiver;
 
+    private IssuesFilter filter;
+
     public IssueListPagerAdapter(FragmentManager fm, ViewPager pager, List<Project> projects, ActivityErrorReceiver errorReceiver) {
         super(fm);
         this.projects = projects;
@@ -32,8 +36,8 @@ public class IssueListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName() + ":" + position);
-        IssueListFragment fragment = IssueListFragment.newInstance(projects.get(position));
+        IssueListFragment fragment = IssueListFragment.newInstance(projects.get(position), filter);
+        fragment.onChangeFilter(filter);
         fragment.setErrorReceiver(errorReceiver);
         return fragment;
     }
@@ -49,7 +53,8 @@ public class IssueListPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void updateIssueList(IssuesFilter filter) {
-        Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
+        this.filter = filter;
         for (int i = 0; i < getCount(); i++) {
             try {
                 IssueListFragment fragment = (IssueListFragment)instantiateItem(pager, i);
@@ -59,4 +64,5 @@ public class IssueListPagerAdapter extends FragmentStatePagerAdapter {
             }
         }
     }
+
 }

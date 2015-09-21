@@ -46,6 +46,10 @@ public class Issues implements Serializable, Iterable<Issue> {
         this.limit = limit;
     }
 
+    public void nextOffset() {
+        offset += limit;
+    }
+
     @Override
     public Iterator<Issue> iterator() {
         return issues.iterator();

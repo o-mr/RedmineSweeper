@@ -4,42 +4,36 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
 import com.kz.redminesweeper.account.Account;
+import com.kz.redminesweeper.adapter.IssueListPagerAdapter;
 import com.kz.redminesweeper.bean.Issues;
 import com.kz.redminesweeper.bean.IssuesFilter;
-import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.bean.Projects;
 import com.kz.redminesweeper.fragment.IssueListFragment;
 import com.kz.redminesweeper.fragment.NavigationFragment;
-import com.kz.redminesweeper.rest.RedmineRestHelper;
-import com.kz.redminesweeper.rest.RedmineRestService;
+import com.kz.redminesweeper.rest.RedmineAccess;
 import com.kz.redminesweeper.view.AccountListItem;
-import com.kz.redminesweeper.view.BlankWall;
-import com.kz.redminesweeper.view.BlankWall_;
 import com.kz.redminesweeper.view.NavigationToggle;
 
 import org.androidannotations.annotations.App;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.api.BackgroundExecutor;
 
-import java.util.List;
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.main)
@@ -75,44 +69,36 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setUp() {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (setupCompleted) return;
-        downloadMasterData();
+        app.setErrorReceiver(this);
+        app.downloadStatuses();
         createIssueListPager();
+        createActionBar();
         setupCompleted = true;
     }
 
-    private void downloadMasterData() {
-        app.setErrorReceiver(this);
-        app.downloadStatuses();
-    }
-
-    @Background
     void createIssueListPager() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        app.getRedmine().executeRest(new RedmineRestHelper.RestExecutor<Projects>() {
-            @Override
-            public Projects execute(RedmineRestService redmine) {
-                return redmine.getProjects();
-            }
-
+        app.getRedmine().downloadProjects(new RedmineAccess.RestResultListener<Projects>() {
             @Override
             public void onSuccessful(Projects result) {
-                setUpIssueListPager(result.getProjects());
+                updateIssueListPager(result);
             }
 
             @Override
-            public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
+            public void onFailed(int msgId, Throwable e) {
                 onReceivedError(msgId, e);
             }
         });
     }
 
     @UiThread
-    void setUpIssueListPager(List<Project> projects) {
+    void updateIssueListPager(Projects projects) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
-        issueListPagerAdapter = new IssueListPagerAdapter(getSupportFragmentManager(), pager, projects, this);
+        issueListPagerAdapter = new IssueListPagerAdapter(getSupportFragmentManager(), pager, projects.getProjects(), this);
         pager.setAdapter(issueListPagerAdapter);
-        createActionBar();
+        createNavigation();
     }
 
     void createActionBar() {
@@ -122,7 +108,6 @@ public class MainActivity extends AppCompatActivity
         actionBar.setHomeButtonEnabled(true);
         actionBar.setElevation(0f);
         actionBar.show();
-        createNavigation();
     }
 
     void createNavigation() {
@@ -223,7 +208,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("deprecation")
     public Drawable getDrawableById(int id) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return getResources().getDrawable(id, getTheme());
         } else {
             return getResources().getDrawable(id);

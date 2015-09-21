@@ -4,14 +4,10 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.view.View;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.kz.redminesweeper.AccountSettingsActivity;
 import com.kz.redminesweeper.AccountSettingsActivity_;
 import com.kz.redminesweeper.ActivityErrorReceiver;
 import com.kz.redminesweeper.IssueDetailActivity;
@@ -26,7 +22,8 @@ import com.kz.redminesweeper.bean.Project;
 import com.kz.redminesweeper.bean.Status;
 import com.kz.redminesweeper.bean.Tracker;
 import com.kz.redminesweeper.bean.Watcher;
-import com.kz.redminesweeper.rest.RedmineRestHelper;
+import com.kz.redminesweeper.rest.InvalidQueryException;
+import com.kz.redminesweeper.rest.RedmineAccess;
 import com.kz.redminesweeper.rest.RedmineRestService;
 import com.kz.redminesweeper.view.BlankWall;
 import com.kz.redminesweeper.view.BlankWall_;
@@ -63,8 +60,6 @@ public class IssueListFragment extends Fragment implements AbsListView.OnScrollL
 
     private IssueListAdapter issueListAdapter;
 
-    private IssuesFilter filter;
-
     private int offset;
 
     private int totalCount;
@@ -77,11 +72,13 @@ public class IssueListFragment extends Fragment implements AbsListView.OnScrollL
 
     private ActivityErrorReceiver errorReceiver;
 
+    @FragmentArg
+    IssuesFilter filter;
+
     @AfterViews
     public void setUp() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         noTickets = BlankWall_.build(getActivity());
-        noTickets.setTitle(R.string.label_no_tickets, 24);
         noTickets.setWallColor(R.color.bg_transparency);
         noTickets.setBlankWallCallBacks(new BlankWall.BlankWallCallBacks() {
             @Override
@@ -107,31 +104,18 @@ public class IssueListFragment extends Fragment implements AbsListView.OnScrollL
     void downloadIssues() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         isLoading = true;
-        app.getRedmine().executeRest(new RedmineRestHelper.RestExecutor<Issues>() {
-            @Override
-            public Issues execute(RedmineRestService redmine) {
-                if (filter instanceof Status) {
-                    return redmine.getMyIssuesByProjectIdAndStatusId(project.getId(), filter.getId(), offset, LIMIT);
-                } else if (filter instanceof Tracker) {
-                    return redmine.getMyIssuesByProjectIdAndTrackerId(project.getId(), filter.getId(), offset, LIMIT);
-                } else if (filter instanceof Watcher) {
-                    return redmine.getIssuesByProjectIdAndWatcherId(project.getId(), filter.getId(), offset, LIMIT);
-                } else {
-                    return null;
+        app.getRedmine().downloadIssues(project, offset, LIMIT, filter, new RedmineAccess.RestResultListener<Issues>() {
+                @Override
+                public void onSuccessful(Issues result) {
+                    updateIssueList(result);
+                }
+
+                @Override
+                public void onFailed(int msgId, Throwable e) {
+                    breakDownloadIssues(msgId, e);
                 }
             }
-
-            @Override
-            public void onSuccessful(Issues result) {
-                updateIssueList(result);
-            }
-
-            @Override
-            public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
-                breakDownloadIssues(msgId, e);
-            }
-
-        });
+        );
     }
 
     @UiThread
@@ -148,6 +132,7 @@ public class IssueListFragment extends Fragment implements AbsListView.OnScrollL
         issueListAdapter.addAll(issues.getIssues());
         issueListAdapter.notifyDataSetChanged();
         if (offset == 0) {
+            noTickets.setTitle(R.string.label_no_tickets, 24);
             noTickets.show(baseLayout);
         }
         refresh.setRefreshing(false);
@@ -160,7 +145,13 @@ public class IssueListFragment extends Fragment implements AbsListView.OnScrollL
     void breakDownloadIssues(int msgId, Throwable e) {
         Log.e(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName(), e);
         refresh.setRefreshing(false);
-        if (errorReceiver != null) errorReceiver.onReceivedError(msgId, e);
+        isLoading = false;
+        if (e instanceof InvalidQueryException) {
+            noTickets.setTitle(R.string.label_invalid_query, 24);
+            noTickets.show(baseLayout);
+        } else {
+            if (errorReceiver != null) errorReceiver.onReceivedError(msgId, e);
+        }
     }
 
     @Override
@@ -208,8 +199,8 @@ public class IssueListFragment extends Fragment implements AbsListView.OnScrollL
         return totalCount;
     }
 
-    public static IssueListFragment newInstance(Project project) {
-        return IssueListFragment_.builder().project(project).build();
+    public static IssueListFragment newInstance(Project project, IssuesFilter filter) {
+        return IssueListFragment_.builder().project(project).filter(filter).build();
     }
 
     public interface IssueListCallbacks {

@@ -19,6 +19,10 @@ public class Project implements Serializable {
 
     private Date updated_on;
 
+    public static String convertDateToString(Date date) {
+        return DateFormat.format("yyyy-MM-dd kk:mm:ss", date).toString();
+    }
+
     public int getId() {
         return id;
     }
@@ -67,16 +71,12 @@ public class Project implements Serializable {
         return updated_on;
     }
 
-    public String getUpdatedOn() {
-        return convertDateToString(updated_on);
-    }
-
     public void setUpdated_on(Date updated_on) {
         this.updated_on = updated_on;
     }
 
-    public static String convertDateToString(Date date) {
-        return DateFormat.format("yyyy-MM-dd kk:mm:ss", date).toString();
+    public String getUpdatedOn() {
+        return convertDateToString(updated_on);
     }
 
     @Override

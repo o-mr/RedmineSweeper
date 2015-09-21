@@ -10,10 +10,8 @@ import com.facebook.crypto.util.SystemNativeCryptoLibrary;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.kz.redminesweeper.bean.User;
 import com.kz.redminesweeper.prefs.SharedPreferences_;
-import com.kz.redminesweeper.rest.RedmineRestHelper;
-import com.kz.redminesweeper.rest.RedmineRestService;
+import com.kz.redminesweeper.rest.RedmineAccess;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -28,8 +26,16 @@ import java.util.List;
 @EBean(scope = EBean.Scope.Singleton)
 public class AccountManager {
 
+    private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+    private static final Type JSON_OBJECT_TYPE = new TypeToken<ArrayList<Account>>() {}.getType();
+
+    private static final String ENTITY_NAME = "com.kz.redminesweeper.crypto";
+
+    private static int idSeq;
+
     @Bean
-    RedmineRestHelper redmineRestHelper;
+    RedmineAccess redmineAccess;
 
     @Pref
     SharedPreferences_ prefs;
@@ -40,14 +46,6 @@ public class AccountManager {
     private Crypto crypto;
 
     private List<Account> accounts;
-
-    private static int idSeq;
-
-    private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-
-    private static final Type JSON_OBJECT_TYPE = new TypeToken<ArrayList<Account>>() {}.getType();
-
-    private static final String ENTITY_NAME = "com.kz.redminesweeper.crypto";
 
     public void loadAccounts() {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
@@ -69,40 +67,31 @@ public class AccountManager {
         }
     }
 
-    public void authenticate(final Account account, final AccountAuthenticator authenticator) {
+    public void authenticate(final Account account, final RedmineAccess.RestResultListener<Account> restResultListener) {
         Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         if (account.getPassword().length() == 0) {
-            authenticator.onAuthFailed(account, 1, 1, null);
-            return;
-        }
-        final Account bk = getEnableAccount();
-        redmineRestHelper.setUpRedmineRestService(account);
-        redmineRestHelper.executeRest(new RedmineRestHelper.RestExecutor<User>() {
-            @Override
-            public User execute(RedmineRestService redmine) {
-                if (account.getPassword() == null) {
-                    return null;
-                } else if (!account.isAuthenticated()) {
-                    return redmine.getMyUserInfo().getUser();
-                } else {
-                    return account.getUser();
+            restResultListener.onFailed(1, null);
+        } else if (account.isAuthenticated()) {
+            changeEnableAccount(account);
+            redmineAccess.setUpRedmineRestService(account);
+            restResultListener.onSuccessful(account);
+        } else {
+            final Account bk = getEnableAccount();
+            redmineAccess.setUpRedmineRestService(account);
+            redmineAccess.downloadCurrentUser(account, new RedmineAccess.RestResultListener<Account>() {
+                @Override
+                public void onSuccessful(Account result) {
+                    changeEnableAccount(account);
+                    restResultListener.onSuccessful(account);
                 }
-            }
 
-            @Override
-            public void onSuccessful(User result) {
-                account.setUser(result);
-                changeEnableAccount(account);
-                authenticator.onAuthSuccessful(account);
-            }
-
-            @Override
-            public void onFailed(RedmineRestHelper.RestError restError, int msgId, Throwable e) {
-                redmineRestHelper.setUpRedmineRestService(bk);
-                authenticator.onAuthFailed(account, 1, msgId, e);
-            }
-        });
-
+                @Override
+                public void onFailed(int msgId, Throwable e) {
+                    redmineAccess.setUpRedmineRestService(bk);
+                    restResultListener.onFailed(msgId, null);
+                }
+            });
+        }
     }
 
     private void saveAccounts() {
@@ -141,6 +130,7 @@ public class AccountManager {
     }
 
     private void changeEnableAccount(Account account) {
+        Log.v(getClass().getName(), new Throwable().getStackTrace()[0].getMethodName());
         for (Account a : accounts) {
             a.setEnable(false);
         }
@@ -165,10 +155,5 @@ public class AccountManager {
 
     public List<Account> getAccounts() {
         return accounts;
-    }
-
-    public interface AccountAuthenticator {
-        void onAuthSuccessful(Account account);
-        void onAuthFailed(Account account, int errorNo, int msgId, Throwable e);
     }
 }
